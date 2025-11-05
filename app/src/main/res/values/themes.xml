@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.KaouzayStyle" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize  light theme here -->
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/kaouzay_gold</item>
+        <item name="colorPrimaryVariant">@color/kaouzay_gold</item>
+        <item name="colorOnPrimary">@color/kaouzay_button_text</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/kaouzay_gold</item>
+        <item name="colorSecondaryVariant">@color/kaouzay_gold</item>
+        <item name="colorOnSecondary">@color/kaouzay_button_text</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+
+        <!-- Couleur de fond de l'activité -->
+        <item name="android:windowBackground">@color/kaouzay_background_dark</item>
+    </style>
+</resources>

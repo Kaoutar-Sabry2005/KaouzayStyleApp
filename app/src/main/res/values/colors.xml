@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  couleur de fond, un noir  -->
+    <color name="kaouzay_background_dark">#000000</color>
+    <!--  couleur dorée/orange pour le bouton  -->
+    <color name="kaouzay_gold">#FAB005</color>
+    <!-- Couleur du texte du bouton  -->
+    <color name="kaouzay_button_text">#000000</color>
+    <!-- Couleur pour le slogan -->
+    <color name="kaouzay_slogan_color">#FFFFFF</color>
+</resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/kaouzay_background_dark"
+    tools:context=".MainActivity">
+
+    <!-- Ligne guide pour le haut du logo : ajustée pour être plus proche du haut -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_logo_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="179dp" />
+
+    <!-- Ligne guide pour le bas du bouton (gardée pour conserver le bouton en bas) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_button_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="80dp" />
+
+    <!-- Logo -->
+
+    <!-- Bouton Explorer la boutique -->
+
+
+    <ImageView
+        android:id="@+id/logo_kaouzay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/kaouzay_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="wrap"
+        tools:srcCompat="@drawable/kaouzay_logo" />
+
+    <Button
+        android:id="@+id/btn_se_connecter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="116dp"
+        android:backgroundTint="@color/kaouzay_gold"
+        android:paddingStart="48dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="48dp"
+        android:paddingBottom="10dp"
+        android:text="Explorer la boutique"
+        android:textColor="@color/kaouzay_button_text"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_button_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.541"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
