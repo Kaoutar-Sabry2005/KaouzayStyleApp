@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#181611"
+    android:padding="24dp">
+
+    <!-- Contenu principal -->
+    <LinearLayout
+        android:id="@+id/mainContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true">
+
+        <!-- Titre -->
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bienvenue de nouveau"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/newsreader_regular"
+            android:gravity="center"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="28dp" />
+
+        <!-- Email -->
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/input_style"
+            android:hint="Email"
+            android:padding="15dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BBB19B"
+            android:fontFamily="@font/newsreader_regular"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Mot de passe -->
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/input_style"
+            android:hint="Mot de passe"
+            android:padding="15dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BBB19B"
+            android:fontFamily="@font/newsreader_regular"
+            android:inputType="textPassword"
+            android:layout_marginBottom="22dp" />
+
+        <!-- Bouton connexion -->
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Se connecter"
+            android:textStyle="bold"
+            android:textColor="#181611"
+            android:backgroundTint="#f9b006"
+            android:fontFamily="@font/newsreader_regular"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Mot de passe oublié -->
+        <TextView
+            android:id="@+id/txtForgotPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mot de passe oublié ?"
+            android:textSize="14sp"
+            android:textColor="#BBB19B"
+            android:fontFamily="@font/newsreader_italic"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+    <!-- Créer un compte — FIXÉ EN BAS -->
+    <TextView
+        android:id="@+id/txtCreateAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Pas de compte ? Créez un compte"
+        android:textColor="#BBB19B"
+        android:textSize="14sp"
+        android:fontFamily="@font/newsreader_regular"
+        android:gravity="center"
+        android:padding="12dp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true" />
+
+</RelativeLayout>

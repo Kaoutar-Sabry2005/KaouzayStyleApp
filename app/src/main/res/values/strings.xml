@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Kaouzay Style</string>
+    <string name="creer_compte_souligne"><u>Pas de compte ? Créer un compte</u></string>
+
 </resources>
