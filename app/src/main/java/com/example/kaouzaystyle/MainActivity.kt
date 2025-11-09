@@ -10,14 +10,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Récupère le bouton depuis le layout (assure-toi que le bouton a bien l'id "btn_se_connecter" dans activity_main.xml)
         val btnSeConnecter: Button = findViewById(R.id.btn_se_connecter)
 
+        // Quand on clique sur le bouton, on ouvre la page de connexion (LoginActivity)
         btnSeConnecter.setOnClickListener {
-            // Logique pour naviguer vers l'écran de Login
-            // Zaynab créera LoginActivity.kt
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
-            // finish() // Optionnel: pour empêcher de revenir à l'écran d'accueil avec le bouton retour
+            // Optionnel : finish() empêche de revenir sur la page d’accueil avec le bouton retour
+            // finish()
         }
     }
 }
