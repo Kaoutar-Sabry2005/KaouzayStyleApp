@@ -93,7 +93,7 @@
         android:textSize="14sp"
         android:fontFamily="@font/newsreader_regular"
         android:gravity="center"
-        android:padding="12dp"
+        android:padding="48dp"
         android:textStyle="bold"
         android:clickable="true"
         android:focusable="true" />
