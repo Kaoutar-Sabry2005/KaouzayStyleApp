@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#171712"
+    android:padding="24dp"
+    tools:context=".SignUpActivity">
+
+    <!-- En-tête avec le titre -->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp">
+
+        <TextView
+            android:id="@+id/txtSignUpTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Inscription"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/newsreader_regular" />
+    </RelativeLayout>
+
+    <!-- Contenu principal du formulaire d'inscription -->
+    <LinearLayout
+        android:id="@+id/signUpContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/header">
+
+        <!-- Nom -->
+        <EditText
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/input_style"
+            android:hint="Nom"
+            android:padding="15dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BBB19B"
+            android:fontFamily="@font/newsreader_regular"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="20dp" />
+        <TextView
+            android:id="@+id/errorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="15dp"
+            android:text="Veuillez entrer votre nom"
+            android:textColor="#FF6666"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+
+        <!-- Adresse e-mail -->
+        <EditText
+            android:id="@+id/editEmailSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/input_style"
+            android:hint="Adresse e-mail"
+            android:padding="15dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BBB19B"
+            android:fontFamily="@font/newsreader_regular"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="20dp" />
+        <TextView
+            android:id="@+id/errorEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="15dp"
+            android:text="Veuillez entrer une adresse e-mail valide"
+            android:textColor="#FF6666"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <!-- Mot de passe -->
+        <EditText
+            android:id="@+id/editPasswordSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/input_style"
+            android:hint="Mot de passe"
+            android:padding="15dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BBB19B"
+            android:fontFamily="@font/newsreader_regular"
+            android:inputType="textPassword"
+            android:layout_marginBottom="20dp" />
+        <TextView
+            android:id="@+id/errorPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="15dp"
+            android:text="Le mot de passe doit contenir au moins 6 caractères"
+            android:textColor="#FF6666"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <!-- Confirmer le mot de passe -->
+        <EditText
+            android:id="@+id/editConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/input_style"
+            android:hint="Confirmer le mot de passe"
+            android:padding="15dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BBB19B"
+            android:fontFamily="@font/newsreader_regular"
+            android:inputType="textPassword"
+            android:layout_marginBottom="20dp" />
+        <TextView
+            android:id="@+id/errorConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="27dp"
+        android:text="Les mots de passe ne correspondent pas"
+        android:textColor="#FF6666"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+        <!-- Bouton S'inscrire -->
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="s'inscrire"
+            android:textStyle="bold"
+            android:textColor="#181611"
+            android:backgroundTint="@color/kaouzay_gold"
+            android:fontFamily="@font/newsreader_regular"
+            android:layout_marginBottom="20dp" />
+
+    </LinearLayout>
+
+    <!-- Lien "Vous avez déjà un compte ? Se connecter" -->
+    <TextView
+        android:id="@+id/txtAlreadyHaveAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signUpContent"
+        android:layout_marginTop="16dp"
+        android:text="Vous avez déjà un compte ? Se connecter"
+        android:textColor="#BBB19B"
+        android:textSize="15sp"
+        android:fontFamily="@font/newsreader_regular"
+        android:gravity="center"
+        android:padding="8dp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true" />
+
+</RelativeLayout>

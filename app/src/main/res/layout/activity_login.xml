@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#181611"
+    android:background="#171712"
     android:padding="24dp">
 
     <!-- Contenu principal -->
@@ -18,7 +18,7 @@
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bienvenue de nouveau"
+            android:text="Welcome to Kaouzay Style"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
@@ -27,13 +27,13 @@
             android:layout_marginTop="28dp"
             android:layout_marginBottom="28dp" />
 
-        <!-- Email -->
+        <!-- Adresse e-mail -->
         <EditText
             android:id="@+id/editEmail"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@drawable/input_style"
-            android:hint="Email"
+            android:hint="Adresse e-mail"
             android:padding="15dp"
             android:textColor="#FFFFFF"
             android:textColorHint="#BBB19B"
@@ -63,7 +63,7 @@
             android:text="Se connecter"
             android:textStyle="bold"
             android:textColor="#181611"
-            android:backgroundTint="#f9b006"
+            android:backgroundTint="@color/kaouzay_gold"
             android:fontFamily="@font/newsreader_regular"
             android:layout_marginBottom="10dp" />
 
@@ -73,12 +73,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Mot de passe oublié ?"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textColor="#BBB19B"
-            android:fontFamily="@font/newsreader_italic"
+            android:fontFamily="@font/newsreader_regular"
             android:gravity="center"
-            android:padding="8dp"
-            android:textStyle="italic" />
+            android:padding="8dp"/>
 
     </LinearLayout>
 
@@ -88,9 +87,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="Pas de compte ? Créez un compte"
+        android:text="Vous n'avez pas de compte ? S'inscrire"
         android:textColor="#BBB19B"
-        android:textSize="14sp"
+        android:textSize="15sp"
         android:fontFamily="@font/newsreader_regular"
         android:gravity="center"
         android:padding="48dp"

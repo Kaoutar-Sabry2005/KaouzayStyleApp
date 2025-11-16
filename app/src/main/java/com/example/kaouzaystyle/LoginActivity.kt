@@ -17,6 +17,8 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.editPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val txtForgotPassword = findViewById<TextView>(R.id.txtForgotPassword)
+        val txtCreateAccount = findViewById<TextView>(R.id.txtCreateAccount)
+
 
         btnLogin.setOnClickListener {
             val emailText = email.text.toString()
@@ -25,10 +27,8 @@ class LoginActivity : AppCompatActivity() {
             if (emailText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show()
             } else {
-                // Ici tu peux plus tard vérifier avec Firebase, SQLite, etc.
-                Toast.makeText(this, "Connexion réussie ✅", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Connexion réussie ", Toast.LENGTH_SHORT).show()
 
-                // Rediriger vers une autre page (ex: HomeActivity)
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -36,7 +36,15 @@ class LoginActivity : AppCompatActivity() {
         }
 
         txtForgotPassword.setOnClickListener {
-            Toast.makeText(this, "Fonctionnalité à venir...", Toast.LENGTH_SHORT).show()
+            // Lancer ForgotPasswordActivity
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+            // Pas de finish() ici, pour pouvoir revenir à LoginActivity
+        }
+
+        txtCreateAccount.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
         }
     }
 }
