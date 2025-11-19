@@ -27,13 +27,16 @@ class LoginActivity : AppCompatActivity() {
             if (emailText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Connexion réussie ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Connexion réussie ✅", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, HomeActivity::class.java)
+                // Cette ligne empêche de revenir à MainActivity ou LoginActivity
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
             }
         }
+
 
         txtForgotPassword.setOnClickListener {
             // Lancer ForgotPasswordActivity

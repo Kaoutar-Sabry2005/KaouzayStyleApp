@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             // Optionnel : finish() empêche de revenir sur la page d’accueil avec le bouton retour
             // finish()
+
         }
     }
 }
