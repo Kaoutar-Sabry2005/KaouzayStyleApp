@@ -13,4 +13,8 @@
     <color name="input_border_normal">#544D3B</color>
     <!-- Couleur pour les messages d'erreur -->
     <color name="kaouzay_error_red">#FF6666</color>
+
+    <color name="kaouzay_green_dark">#006400</color>
+    <color name="kaouzay_blue_navy">#000080</color>
+    <color name="kaouzay_red_dark">#8B0000</color>
 </resources>

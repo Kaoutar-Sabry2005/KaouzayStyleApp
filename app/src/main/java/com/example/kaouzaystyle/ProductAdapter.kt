@@ -1,6 +1,7 @@
 package com.example.kaouzaystyle
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,31 @@ class ProductAdapter(
         val img: ImageView = view.findViewById(R.id.productImage)
         val name: TextView = view.findViewById(R.id.productName)
         val price: TextView = view.findViewById(R.id.productPrice)
+
+        // Dans ProductAdapter.kt
+
+        init {
+            view.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val product = productList[position]
+                    val intent = Intent(context, ProductDetailActivity::class.java).apply {
+                        putExtra("product_name", product.name)
+                        putExtra("product_price", product.price)
+                        putExtra("product_image_res_id", product.image)
+                        putExtra("product_description", product.description)
+
+                        // CORRECTION ICI : On utilise variants et non plus availableColors
+                        // On cast en ArrayList pour que putSerializableExtra fonctionne bien
+                        putExtra("product_variants", ArrayList(product.variants))
+
+                        // On passe les tailles
+                        putStringArrayListExtra("product_sizes", ArrayList(product.availableSizes))
+                    }
+                    context.startActivity(intent)
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
