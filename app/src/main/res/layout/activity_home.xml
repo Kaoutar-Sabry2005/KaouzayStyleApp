@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#181611"
-    android:padding="16dp">
+    android:background="#171712"
+    android:padding="6dp">
 
     <!-- Titre -->
     <TextView
@@ -11,24 +11,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="KaouZay Style"
-        android:textSize="50sp"
+        android:textSize="30sp"
+        android:padding="5dp"
         android:fontFamily="@font/great_vibes"
         android:shadowColor="#000000"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="4"
-        android:textColor="#FFC107"
+        android:textColor="#FAB005"
         android:gravity="center"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="0dp" />
 
     <!-- Barre de recherche -->
     <RelativeLayout
         android:id="@+id/searchBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="38dp"
         android:layout_below="@id/brandName"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:background="@drawable/input_style"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -36,11 +37,11 @@
         <ImageView
             android:id="@+id/searchIcon"
             android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_search"
-            app:tint="#FFFFFF"/>
+            app:tint="#BAB09C"/>
 
         <!-- EditText -->
         <EditText
@@ -50,8 +51,9 @@
             android:layout_toEndOf="@id/searchIcon"
             android:layout_marginStart="10dp"
             android:hint="Rechercher un produit..."
-            android:textColor="#FFFFFF"
-            android:textColorHint="#BBB19B"
+            android:fontFamily="@font/newsreader_regular"
+            android:textColor="#BAB09C"
+            android:textColorHint="#BAB09C"
             android:padding="10dp"
             android:background="@android:color/transparent"/>
     </RelativeLayout>
@@ -61,10 +63,11 @@
     <HorizontalScrollView
         android:id="@+id/scrollCategories"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="30dp"
         android:layout_below="@id/searchBarLayout"
-        android:layout_marginTop="20dp"
-        android:scrollbars="none">
+        android:layout_marginTop="10dp"
+        android:scrollbars="none"
+        android:weightSum="10">
 
         <LinearLayout
             android:id="@+id/menuCategories"
@@ -184,7 +187,7 @@
         android:layout_height="0dp"
         android:layout_below="@id/scrollCategories"
         android:layout_above="@id/menuBottom"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="10dp"/>
 
     <!-- Menu bas -->
     <LinearLayout
@@ -194,7 +197,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="#1f1f1f"
+        android:background="#26241C"
         android:weightSum="4">
 
         <!-- Accueil -->
@@ -208,13 +211,15 @@
                 android:id="@+id/iconAccueil"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home" />
+                android:src="@drawable/ic_home"
+                android:tint="#BAB09C"/>
             <TextView
                 android:id="@+id/menuAccueil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
-                android:textColor="#AAAAAA"
+                android:textColor="#BAB09C"
+                android:fontFamily="@font/newsreader_regular"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -229,13 +234,15 @@
                 android:id="@+id/iconCategorie"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_categories" />
+                android:src="@drawable/ic_categories"
+                android:tint="#BAB09C"/>
             <TextView
                 android:id="@+id/menuCategorie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Catégorie"
-                android:textColor="#AAAAAA"
+                android:textColor="#BAB09C"
+                android:fontFamily="@font/newsreader_regular"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -250,13 +257,15 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_cart" />
+                android:src="@drawable/ic_cart"
+                android:tint="#BAB09C" />
             <TextView
                 android:id="@+id/menuPanier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Panier"
-                android:textColor="#AAAAAA"
+                android:fontFamily="@font/newsreader_regular"
+                android:textColor="#BAB09C"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -271,13 +280,15 @@
                 android:id="@+id/iconProfil"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:tint="#BAB09C"
                 android:src="@drawable/ic_profile" />
             <TextView
                 android:id="@+id/menuProfil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profil"
-                android:textColor="#AAAAAA"
+                android:textColor="#BAB09C"
+                android:fontFamily="@font/newsreader_regular"
                 android:textSize="12sp" />
         </LinearLayout>
 
