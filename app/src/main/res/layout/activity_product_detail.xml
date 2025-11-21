@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#171712"
+    tools:context=".ProductDetailActivity">
+
+    <!-- Barre supérieure avec flèche retour -->
+    <RelativeLayout
+        android:id="@+id/detailTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:contentDescription="Retour"
+            android:focusable="true"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="#FFFFFF" />
+
+    </RelativeLayout>
+
+    <!-- Contenu défilant -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/detailTopBar"
+        android:layout_above="@id/bottomNavContainer">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Image du produit (chargée dynamiquement) -->
+            <ImageView
+                android:id="@+id/productDetailImage"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="Image du produit" />
+
+
+            <!-- Nom du produit -->
+            <TextView
+                android:id="@+id/productDetailName"
+                android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nom du produit"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/newsreader_regular"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
+
+            <!-- Prix du produit -->
+            <TextView
+                android:id="@+id/productDetailPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0.00 MAD"
+                android:textColor="#BAB09C"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/newsreader_regular"
+                android:layout_marginBottom="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/productDetailDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description du produit"
+                android:textColor="#D5D0C8"
+                android:textSize="16sp"
+                android:fontFamily="@font/newsreader_regular"
+                android:layout_marginBottom="24dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+
+                android:ellipsize="none"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:inputType="textMultiLine"
+                />
+
+            <!-- Section Taille -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Taille"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/newsreader_regular"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+
+            <LinearLayout
+                android:id="@+id/sizeSelectionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <Button
+                    android:id="@+id/sizeS"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/size_button_background"
+                    android:text="S"
+                    android:textColor="@color/size_button_text_color"
+                    android:textSize="16sp" />
+                <Button
+                    android:id="@+id/sizeM"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/size_button_background"
+                    android:text="M"
+                    android:textColor="@color/size_button_text_color"
+                    android:textSize="16sp" />
+                <Button
+                    android:id="@+id/sizeL"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/size_button_background"
+                    android:text="L"
+                    android:textColor="@color/size_button_text_color"
+                    android:textSize="16sp" />
+                <Button
+                    android:id="@+id/sizeXL"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/size_button_background"
+                    android:text="XL"
+                    android:textColor="@color/size_button_text_color"
+                    android:textSize="16sp" />
+                <Button
+                    android:id="@+id/size2XL"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/size_button_background"
+                    android:text="2XL"
+                    android:textColor="@color/size_button_text_color"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Section Couleur -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Couleur"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/newsreader_regular"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+
+            <LinearLayout
+                android:id="@+id/colorSelectionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="32dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomNavContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#171712">
+
+        <Button
+            android:id="@+id/addToCartButton"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Ajouter au panier"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:backgroundTint="#3B3326"
+            android:fontFamily="@font/newsreader_regular"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/buyNowButton"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Acheter maintenant"
+            android:textColor="#181611"
+            android:textStyle="bold"
+            android:backgroundTint="@color/kaouzay_gold"
+            android:fontFamily="@font/newsreader_regular" />
+    </LinearLayout>
+</RelativeLayout>
