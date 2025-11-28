@@ -17,7 +17,6 @@
         android:textStyle="bold"
         android:layout_marginBottom="30dp"/>
 
-    <!-- LE BOUTON AVEC ID CORRECT -->
     <Button
         android:id="@+id/btnGoHome"
         android:layout_width="match_parent"

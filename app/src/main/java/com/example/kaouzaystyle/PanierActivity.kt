@@ -2,6 +2,7 @@ package com.example.kaouzaystyle
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,101 +13,65 @@ import androidx.recyclerview.widget.RecyclerView
 
 class PanierActivity : AppCompatActivity() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var subtotalAmount: TextView
-    private lateinit var totalAmount: TextView
-    private lateinit var checkoutButton: Button
-
-    private val shipping = 0.0
+    private lateinit var subtotalTxt: TextView
+    private lateinit var totalTxt: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
-        // Recycler et Totaux
-        recyclerView = findViewById(R.id.cartRecyclerView)
-        subtotalAmount = findViewById(R.id.subtotalAmount)
-        totalAmount = findViewById(R.id.totalAmount)
-        checkoutButton = findViewById(R.id.checkoutButton)
+        val recyclerView = findViewById<RecyclerView>(R.id.cartRecyclerView)
+        subtotalTxt = findViewById(R.id.subtotalAmount)
+        totalTxt = findViewById(R.id.totalAmount)
+        val btnCheckout = findViewById<Button>(R.id.checkoutButton)
+        val btnBack = findViewById<ImageView>(R.id.cartBackButton)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = CartAdapter(CartManager.cartItems) {
-            updateTotals()
+        // Chargement adaptateur
+        val adapter = CartAdapter(CartManager.cartItems) {
+            updateUI() // Rappelé quand qté change
         }
-        updateTotals()
+        recyclerView.adapter = adapter
 
-        checkoutButton.setOnClickListener {
-            // Crée un intent vers l'activité de paiement
-            val intent = Intent(this, PaymentActivity::class.java)
+        updateUI()
 
-            // Tu peux passer le total à PaymentActivity si tu veux
-            intent.putExtra("TOTAL_AMOUNT", totalAmount.text.toString())
-
-            // Démarre l'activité de paiement
-            startActivity(intent)
+        btnCheckout.setOnClickListener {
+            if (CartManager.cartItems.isEmpty()) {
+                Toast.makeText(this, "Le panier est vide", Toast.LENGTH_SHORT).show()
+            } else {
+                val i = Intent(this, PaymentActivity::class.java)
+                i.putExtra("TOTAL_AMOUNT", totalTxt.text.toString())
+                startActivity(i)
+            }
         }
 
-
-        // Menu bas
+        btnBack.setOnClickListener { finish() }
         setupBottomMenu()
-
-        // Flèche retour : revient à HomeActivity sur la catégorie précédente
-        findViewById<ImageView>(R.id.cartBackButton).setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("activeTab", "accueil") // ou "categorie" selon le cas
-            intent.putExtra("openCategory", "caftan") // ou la dernière catégorie choisie
-            startActivity(intent)
-            finish()
-        }
-
-
     }
 
-    private fun updateTotals() {
+    private fun updateUI() {
         val subtotal = CartManager.cartItems.sumOf { it.price * it.quantity }
-        val total = subtotal + shipping
-        subtotalAmount.text = "%.2f MAD".format(subtotal)
-        totalAmount.text = "%.2f MAD".format(total)
+        subtotalTxt.text = "%.2f MAD".format(subtotal)
+        totalTxt.text = "%.2f MAD".format(subtotal)
     }
 
-    // --- MENU BAS ---
     private fun setupBottomMenu() {
-        // Accueil
-        // Accueil
-        findViewById<ImageView>(R.id.iconAccueilCart).setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("activeTab", "accueil")
-            startActivity(intent)
+        findViewById<View>(R.id.tabAccueilCart).setOnClickListener {
+            val i = Intent(this, HomeActivity::class.java)
+            i.putExtra("activeTab", "accueil")
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(i)
             finish()
         }
-
-        findViewById<ImageView>(R.id.iconCategorieCart).setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("activeTab", "categorie")
-            intent.putExtra("openCategory", "caftan")
-            startActivity(intent)
+        findViewById<View>(R.id.tabCategorieCart).setOnClickListener {
+            val i = Intent(this, HomeActivity::class.java)
+            i.putExtra("activeTab", "categorie")
+            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(i)
             finish()
         }
-
-
-
-        // Profil
-        findViewById<ImageView>(R.id.iconProfilCart).setOnClickListener {
-            startActivity(Intent(this, ProfilActivity::class.java))
-            finish()
+        findViewById<View>(R.id.tabProfilCart).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
-    }
-
-    // --- NAVIGATION VERS HOME ---
-    private fun navigateToHomeWithCategory() {
-        // On récupère la dernière catégorie choisie si on en a besoin
-        val lastCategory = intent.getStringExtra("lastCategory") ?: "caftan"
-
-        val intent = Intent(this, HomeActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        intent.putExtra("fromCart", true)
-        intent.putExtra("openCategory", lastCategory) // ouvre la catégorie précédemment sélectionnée
-        startActivity(intent)
-        finish()
     }
 }

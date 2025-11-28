@@ -1,20 +1,21 @@
 package com.example.kaouzaystyle
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.view.View // Import pour View.GONE et View.VISIBLE
 
 class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
-        // Récupérer les vues des champs
         val editName = findViewById<EditText>(R.id.editName)
         val editEmail = findViewById<EditText>(R.id.editEmailSignUp)
         val editPassword = findViewById<EditText>(R.id.editPasswordSignUp)
@@ -22,29 +23,24 @@ class SignUpActivity : AppCompatActivity() {
         val btnSignUp = findViewById<Button>(R.id.btnSignUp)
         val txtAlreadyHaveAccount = findViewById<TextView>(R.id.txtAlreadyHaveAccount)
 
-        // Récupérer les vues des messages d'erreur
         val errorName = findViewById<TextView>(R.id.errorName)
         val errorEmail = findViewById<TextView>(R.id.errorEmail)
         val errorPassword = findViewById<TextView>(R.id.errorPassword)
         val errorConfirmPassword = findViewById<TextView>(R.id.errorConfirmPassword)
 
-
-        // Gérer le clic sur le bouton "S'inscrire"
         btnSignUp.setOnClickListener {
             val name = editName.text.toString().trim()
             val email = editEmail.text.toString().trim()
             val password = editPassword.text.toString()
             val confirmPassword = editConfirmPassword.text.toString()
 
-            // Cacher tous les messages d'erreur avant une nouvelle validation
             errorName.visibility = View.GONE
             errorEmail.visibility = View.GONE
             errorPassword.visibility = View.GONE
             errorConfirmPassword.visibility = View.GONE
 
-            var isValid = true // Flag pour suivre l'état de la validation
+            var isValid = true
 
-            // Valider les champs
             if (name.isEmpty()) {
                 errorName.text = "Veuillez entrer votre nom"
                 errorName.visibility = View.VISIBLE
@@ -55,7 +51,7 @@ class SignUpActivity : AppCompatActivity() {
                 errorEmail.text = "Veuillez entrer une adresse e-mail"
                 errorEmail.visibility = View.VISIBLE
                 isValid = false
-            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 errorEmail.text = "Veuillez entrer une adresse e-mail valide"
                 errorEmail.visibility = View.VISIBLE
                 isValid = false
@@ -72,9 +68,6 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             if (confirmPassword.isEmpty()) {
-                // Pas de message spécifique si vide, car la validation de non-correspondance le gérera
-                // ou on peut mettre un message générique si on veut absolument un message ici.
-                // Pour l'instant, la validation password != confirmPassword couvrira cela.
                 errorConfirmPassword.text = "Veuillez confirmer votre mot de passe"
                 errorConfirmPassword.visibility = View.VISIBLE
                 isValid = false
@@ -84,11 +77,21 @@ class SignUpActivity : AppCompatActivity() {
                 isValid = false
             }
 
-            // Si toutes les validations passent
             if (isValid) {
-                Toast.makeText(this, "Inscription réussie ! Veuillez vous connecter.", Toast.LENGTH_LONG).show()
+                // --- SAUVEGARDE DES DONNÉES DANS LE TÉLÉPHONE ---
+                val sharedPref = getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
+                val editor = sharedPref.edit()
+                editor.putString("registered_name", name)
+                editor.putString("registered_email", email)
+                editor.putString("registered_password", password)
+                // On peut aussi initier le téléphone et l'adresse à vide
+                editor.putString("registered_phone", "")
+                editor.putString("registered_address", "")
+                editor.apply()
 
-                // Rediriger vers l'écran de connexion après une inscription réussie
+                Toast.makeText(this, "Inscription réussie !", Toast.LENGTH_SHORT).show()
+
+                // Redirection
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
@@ -96,9 +99,8 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
-        // Gérer le clic sur "Vous avez déjà un compte ? Se connecter"
         txtAlreadyHaveAccount.setOnClickListener {
-            finish() // Retourne simplement à l'activité de connexion
+            finish()
         }
     }
 }

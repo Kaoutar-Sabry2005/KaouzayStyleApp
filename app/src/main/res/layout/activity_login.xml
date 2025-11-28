@@ -38,8 +38,21 @@
             android:textColor="#FFFFFF"
             android:textColorHint="#BBB19B"
             android:fontFamily="@font/newsreader_regular"
-            android:inputType="textEmailAddress"
-            android:layout_marginBottom="20dp" />
+            android:inputType="textEmailAddress" />
+
+        <!-- ERREUR EMAIL  -->
+        <TextView
+            android:id="@+id/errorEmailLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF6666"
+            android:text="Erreur email"
+            android:textSize="12sp"
+            android:fontFamily="@font/newsreader_regular"
+            android:visibility="gone"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="10dp"/>
 
         <!-- Mot de passe -->
         <EditText
@@ -49,11 +62,25 @@
             android:background="@drawable/input_style"
             android:hint="Mot de passe"
             android:padding="15dp"
+            android:layout_marginTop="16dp"
             android:textColor="#FFFFFF"
             android:textColorHint="#BBB19B"
             android:fontFamily="@font/newsreader_regular"
-            android:inputType="textPassword"
-            android:layout_marginBottom="22dp" />
+            android:inputType="textPassword" />
+
+        <!-- ERREUR MOT DE PASSE  -->
+        <TextView
+            android:id="@+id/errorPasswordLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF6666"
+            android:text="Erreur mot de passe"
+            android:textSize="12sp"
+            android:fontFamily="@font/newsreader_regular"
+            android:visibility="gone"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="22dp"/>
 
         <!-- Bouton connexion -->
         <Button
@@ -63,6 +90,7 @@
             android:text="Se connecter"
             android:textStyle="bold"
             android:textColor="#181611"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@color/kaouzay_gold"
             android:fontFamily="@font/newsreader_regular"
             android:layout_marginBottom="10dp" />

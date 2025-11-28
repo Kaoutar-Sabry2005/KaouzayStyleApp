@@ -13,8 +13,8 @@
         android:layout_height="120dp"
         android:layout_alignParentEnd="true"
         android:scaleType="centerCrop"
-        android:background="@drawable/rounded_corners"
-        android:src="@drawable/ic_launcher_background" />
+        android:background="@drawable/size_button_background"
+        android:src="@drawable/caftanvert" />
 
     <!-- BLOC INFO -->
     <LinearLayout
@@ -24,14 +24,29 @@
         android:layout_marginEnd="16dp"
         android:orientation="vertical">
 
-        <!-- Taille -->
-        <TextView
-            android:id="@+id/cartItemSize"
+        <!-- LIGNE TAILLE ET COULEUR -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Taille: M"
-            android:textColor="#C4C4C4"
-            android:textSize="13sp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/cartItemSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Taille: M"
+                android:textColor="#C4C4C4"
+                android:textSize="13sp" />
+
+            <!-- AJOUT DE LA VUE COULEUR ICI POUR CORRIGER L'ERREUR -->
+            <View
+                android:id="@+id/cartItemColorView"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="8dp"
+                android:background="#FFFFFF"/>
+        </LinearLayout>
 
         <!-- Nom produit -->
         <TextView

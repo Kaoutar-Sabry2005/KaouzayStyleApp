@@ -1,23 +1,37 @@
 package com.example.kaouzaystyle
 
-// Gestion globale du panier
+import java.io.Serializable
+
+// Modèle de données
+data class CartItem(
+    val name: String,
+    val price: Double,
+    val imageResId: Int,
+    val size: String,
+    val colorInt: Int,
+    var quantity: Int = 1
+) : Serializable
+
+// Singleton (Base de données temporaire en mémoire)
 object CartManager {
     val cartItems = mutableListOf<CartItem>()
 
     fun addToCart(item: CartItem) {
-        cartItems.add(item)
+        // On vérifie si l'article identique existe déjà
+        val existing = cartItems.find {
+            it.name == item.name &&
+                    it.size == item.size &&
+                    it.colorInt == item.colorInt
+        }
+
+        if (existing != null) {
+            existing.quantity++
+        } else {
+            cartItems.add(item)
+        }
     }
 
     fun clearCart() {
         cartItems.clear()
     }
 }
-// Représentation d'un produit dans le panier
-data class CartItem(
-    val name: String,
-    val price: Double,
-    val imageResId: Int,
-    val size: String,
-    val color: Int,
-    var quantity: Int = 1
-)

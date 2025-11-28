@@ -14,182 +14,148 @@ class ProductDetailActivity : AppCompatActivity() {
     private var selectedSizeButton: Button? = null
     private var selectedColorView: View? = null
     private var currentImageResId: Int = 0
-    private lateinit var productDetailImage: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_detail)
 
-        // Views
-        productDetailImage = findViewById(R.id.productDetailImage)
-        val productDetailName = findViewById<TextView>(R.id.productDetailName)
-        val productDetailPrice = findViewById<TextView>(R.id.productDetailPrice)
-        val productDetailDescription = findViewById<TextView>(R.id.productDetailDescription)
-        val addToCartButton = findViewById<Button>(R.id.addToCartButton)
-        val buyNowButton = findViewById<Button>(R.id.buyNowButton)
-        val colorSelectionLayout = findViewById<LinearLayout>(R.id.colorSelectionLayout)
-        val sizeSelectionLayout = findViewById<LinearLayout>(R.id.sizeSelectionLayout)
-        val backButton = findViewById<ImageView>(R.id.backButton)
+        // Récupération vues
+        val imgProduct = findViewById<ImageView>(R.id.productDetailImage)
+        val txtName = findViewById<TextView>(R.id.productDetailName)
+        val txtPrice = findViewById<TextView>(R.id.productDetailPrice)
+        val txtDesc = findViewById<TextView>(R.id.productDetailDescription)
+        val layoutColors = findViewById<LinearLayout>(R.id.colorSelectionLayout)
+        val layoutSizes = findViewById<LinearLayout>(R.id.sizeSelectionLayout)
+        val btnAdd = findViewById<Button>(R.id.addToCartButton)
+        val btnBuy = findViewById<Button>(R.id.buyNowButton)
+        val btnBack = findViewById<ImageView>(R.id.backButton)
 
-        // Intent data
-        val productName = intent.getStringExtra("product_name")
-        val productPriceStr = intent.getStringExtra("product_price") ?: "0.0"
-        val description = intent.getStringExtra("product_description")
-        val defaultImage = intent.getIntExtra("product_image_res_id", 0)
-
-        // Extract numeric price
-        val productPriceValue =
-            productPriceStr.replace("[^\\d.]".toRegex(), "").toDoubleOrNull() ?: 0.0
+        // Récupération Intent
+        val pName = intent.getStringExtra("product_name") ?: "Produit"
+        val pPrice = intent.getStringExtra("product_price") ?: "0.0"
+        val pDesc = intent.getStringExtra("product_description")
+        val pImg = intent.getIntExtra("product_image_res_id", 0)
 
         @Suppress("UNCHECKED_CAST")
-        val variantsList = intent.getSerializableExtra("product_variants") as? ArrayList<ProductVariant>
-            ?: arrayListOf()
+        val variants = intent.getSerializableExtra("product_variants") as? ArrayList<ProductVariant> ?: arrayListOf()
+        val sizes = intent.getStringArrayListExtra("product_sizes") ?: arrayListOf()
 
-        val sizesList = intent.getStringArrayListExtra("product_sizes") ?: arrayListOf()
+        // Affichage
+        txtName.text = pName
+        txtPrice.text = pPrice
+        txtDesc.text = pDesc
+        if (pImg != 0) imgProduct.setImageResource(pImg)
+        currentImageResId = pImg
 
-        // Update UI
-        productDetailName.text = productName
-        productDetailPrice.text = "%.2f MAD".format(productPriceValue)
-        productDetailDescription.text = description
+        btnBack.setOnClickListener { finish() }
 
-        if (defaultImage != 0) {
-            productDetailImage.setImageResource(defaultImage)
-            currentImageResId = defaultImage
-        }
+        // Nettoyage Prix (Enlever "MAD" ou espaces pour avoir un Double)
+        val cleanPrice = pPrice.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
 
-        backButton.setOnClickListener { finish() }
-
-        // ------------ SIZE SELECTION ---------------
-        sizeSelectionLayout.removeAllViews()
-        for (sizeStr in sizesList) {
+        // --- GÉNÉRATION TAILLES ---
+        layoutSizes.removeAllViews()
+        for (s in sizes) {
             val btn = Button(this)
-            val size48 = dpToPx(48)
-            val params = LinearLayout.LayoutParams(size48, size48)
+            val params = LinearLayout.LayoutParams(dpToPx(48), dpToPx(48))
             params.marginEnd = dpToPx(8)
             btn.layoutParams = params
-            btn.text = sizeStr
-            btn.background =
-                ContextCompat.getDrawable(this, R.drawable.size_button_background)
-            btn.setTextColor(
-                ContextCompat.getColorStateList(
-                    this,
-                    R.color.size_button_text_color
-                )
-            )
-            btn.setPadding(0, 0, 0, 0)
+            btn.text = s
+            btn.background = ContextCompat.getDrawable(this, R.drawable.size_button_background)
+            btn.setTextColor(ContextCompat.getColorStateList(this, R.color.size_button_text_color))
+
             btn.setOnClickListener {
                 selectedSizeButton?.isSelected = false
                 btn.isSelected = true
                 selectedSizeButton = btn
             }
-            sizeSelectionLayout.addView(btn)
+            layoutSizes.addView(btn)
+        }
+        // Sélection par défaut (1er bouton)
+        if (layoutSizes.childCount > 0) {
+            (layoutSizes.getChildAt(0) as Button).performClick()
         }
 
-        // ------------ COLOR SELECTION ---------------
-        colorSelectionLayout.removeAllViews()
-        val boxSize = dpToPx(40)
-        val margin = dpToPx(16)
+        // --- GÉNÉRATION COULEURS ---
+        layoutColors.removeAllViews()
+        for (v in variants) {
+            val view = View(this)
+            val params = LinearLayout.LayoutParams(dpToPx(40), dpToPx(40))
+            params.marginEnd = dpToPx(16)
+            view.layoutParams = params
+            view.tag = v // IMPORTANT: On stocke le variant dans le tag
 
-        for (variant in variantsList) {
-            val colorBox = View(this)
-            val params = LinearLayout.LayoutParams(boxSize, boxSize)
-            params.marginEnd = margin
-            colorBox.layoutParams = params
-            colorBox.tag = variant
-            colorBox.background = createRoundedShape(variant.colorInt, false)
+            view.background = createRoundedShape(v.colorInt, false)
 
-            colorBox.setOnClickListener {
-                selectedColorView?.let { oldView ->
-                    val oldVariant = oldView.tag as ProductVariant
-                    oldView.background = createRoundedShape(oldVariant.colorInt, false)
+            view.setOnClickListener {
+                // Reset ancien
+                selectedColorView?.let { old ->
+                    val oldV = old.tag as ProductVariant
+                    old.background = createRoundedShape(oldV.colorInt, false)
                 }
-                selectedColorView = colorBox
-                colorBox.background = createRoundedShape(variant.colorInt, true)
+                // Activer nouveau
+                selectedColorView = view
+                view.background = createRoundedShape(v.colorInt, true)
 
-                productDetailImage.setImageResource(variant.imageResId)
-                currentImageResId = variant.imageResId
+                // Changer image
+                imgProduct.setImageResource(v.imageResId)
+                currentImageResId = v.imageResId
             }
-
-            colorSelectionLayout.addView(colorBox)
+            layoutColors.addView(view)
+        }
+        // Sélection par défaut (1ere couleur)
+        if (layoutColors.childCount > 0) {
+            layoutColors.getChildAt(0).callOnClick()
         }
 
-        // ------------ ADD TO CART ---------------
-        addToCartButton.setOnClickListener {
-            if (checkSelection()) {
-                val selectedColorInt =
-                    (selectedColorView?.tag as? ProductVariant)?.colorInt
-                        ?: Color.WHITE
-
-                CartManager.addToCart(
-                    CartItem(
-                        name = productName ?: "",
-                        price = productPriceValue,
-                        imageResId = currentImageResId,
-                        size = selectedSizeButton?.text.toString(),
-                        color = selectedColorInt
-                    )
-                )
-
-                Toast.makeText(
-                    this,
-                    "Produit ajouté au panier avec succès",
-                    Toast.LENGTH_SHORT
-                ).show()
+        // --- CLIC AJOUTER PANIER ---
+        btnAdd.setOnClickListener {
+            if (addToCartLogic(pName, cleanPrice)) {
+                Toast.makeText(this, "Produit ajouté au panier !", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // ------------ BUY NOW (Add + Go to Cart) ---------------
-        buyNowButton.setOnClickListener {
-            if (checkSelection()) {
-                val selectedColorInt =
-                    (selectedColorView?.tag as? ProductVariant)?.colorInt
-                        ?: Color.WHITE
-
-                CartManager.addToCart(
-                    CartItem(
-                        name = productName ?: "",
-                        price = productPriceValue,
-                        imageResId = currentImageResId,
-                        size = selectedSizeButton?.text.toString(),
-                        color = selectedColorInt
-                    )
-                )
-
-                // Lancer la bonne activité
-                startActivity(Intent(this, PanierActivity::class.java))
+        // --- CLIC ACHETER ---
+        btnBuy.setOnClickListener {
+            if (addToCartLogic(pName, cleanPrice)) {
+                val intent = Intent(this, PanierActivity::class.java)
+                startActivity(intent)
             }
         }
-
     }
 
-    // Vérification taille + couleur
-    private fun checkSelection(): Boolean {
-        if (selectedSizeButton == null) {
-            Toast.makeText(this, "Veuillez choisir une taille", Toast.LENGTH_SHORT).show()
+    // Fonction commune pour éviter de dupliquer le code
+    private fun addToCartLogic(name: String, price: Double): Boolean {
+        if (selectedSizeButton == null || selectedColorView == null) {
+            Toast.makeText(this, "Chargement en cours, réessayez...", Toast.LENGTH_SHORT).show()
             return false
         }
-        if (selectedColorView == null) {
-            Toast.makeText(this, "Veuillez choisir une couleur", Toast.LENGTH_SHORT).show()
-            return false
-        }
+
+        val sizeVal = selectedSizeButton?.text.toString()
+        val variant = selectedColorView?.tag as? ProductVariant
+        val colorVal = variant?.colorInt ?: Color.BLACK // Fallback
+        val finalImg = variant?.imageResId ?: currentImageResId
+
+        val item = CartItem(
+            name = name,
+            price = price,
+            imageResId = finalImg,
+            size = sizeVal,
+            colorInt = colorVal,
+            quantity = 1
+        )
+
+        CartManager.addToCart(item)
         return true
     }
 
-    private fun createRoundedShape(color: Int, isSelected: Boolean): GradientDrawable {
-        val shape = GradientDrawable()
-        shape.shape = GradientDrawable.RECTANGLE
-        shape.cornerRadius = dpToPx(8).toFloat()
-        shape.setColor(color)
-
-        if (isSelected)
-            shape.setStroke(dpToPx(2), Color.parseColor("#FAB005"))
-        else
-            shape.setStroke(0, Color.TRANSPARENT)
-
-        return shape
+    private fun createRoundedShape(color: Int, selected: Boolean): GradientDrawable {
+        val d = GradientDrawable()
+        d.shape = GradientDrawable.RECTANGLE
+        d.cornerRadius = dpToPx(8).toFloat()
+        d.setColor(color)
+        if (selected) d.setStroke(dpToPx(2), Color.parseColor("#FAB005"))
+        return d
     }
 
-    private fun dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
-    }
+    private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 }
