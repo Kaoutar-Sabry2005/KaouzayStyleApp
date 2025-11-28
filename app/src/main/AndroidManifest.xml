@@ -41,6 +41,11 @@
         <activity
             android:name=".ProductDetailActivity"
             android:exported="false" />
+        <activity
+            android:name=".PanierActivity"
+            android:exported="false" />
+        <activity android:name=".PaymentActivity" android:exported="false" />
+        <activity android:name=".SuccessActivity" android:exported="false" />
     </application>
 
 </manifest>

@@ -1,23 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#171712">
 
+    <!-- Bouton retour -->
     <ImageView
         android:id="@+id/cartBackButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/ic_arrow_back"
-        app:tint="#FFFFFF"
         android:layout_margin="16dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto"/>
+        app:tint="#FFFFFF" />
 
+    <!-- Titre -->
     <TextView
+        android:id="@+id/cartTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mon Panier (Vide pour dev binôme)"
+        android:text="Panier"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:layout_centerInParent="true"/>
+        android:textSize="22sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <!-- RecyclerView qui occupe l'espace entre top et summary -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cartRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/cartBackButton"
+        android:layout_above="@id/summarySection"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp" />
+
+    <!-- SECTION TOTAL + SOUS TOTAL -->
+    <LinearLayout
+        android:id="@+id/summarySection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_above="@id/checkoutButton"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:id="@+id/summaryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Totale"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <!-- Sous-total -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
+
+            <TextView
+                android:id="@+id/subtotalText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Sous-total"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/subtotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00 MAD"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Livraison -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
+
+            <TextView
+                android:id="@+id/shippingText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Livraison"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/shippingAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gratuite"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Total -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
+
+            <TextView
+                android:id="@+id/totalText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Total"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/totalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00 MAD"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- BOUTON PAIEMENT -->
+    <Button
+        android:id="@+id/checkoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Procéder au paiement"
+        android:textColor="#000000"
+        android:background="@drawable/rounded_button_yellow"
+        android:textAllCaps="false"
+        android:layout_above="@id/bottomMenu"
+        android:layout_margin="16dp" />
+
+    <!-- MENU BAS -->
+    <LinearLayout
+        android:id="@+id/bottomMenu"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="#1F1F1F"
+        android:padding="8dp">
+
+        <!-- Accueil -->
+        <LinearLayout
+            android:id="@+id/tabAccueilCart"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iconAccueilCart"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_home"
+                app:tint="#BAB09C" />
+
+            <TextView
+                android:id="@+id/menuAccueilCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accueil"
+                android:textColor="#BAB09C"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Catégorie -->
+        <LinearLayout
+            android:id="@+id/tabCategorieCart"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iconCategorieCart"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_categories"
+                app:tint="#BAB09C" />
+
+            <TextView
+                android:id="@+id/menuCategorieCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Catégorie"
+                android:textColor="#BAB09C"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Panier -->
+        <LinearLayout
+            android:id="@+id/tabPanierCart"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="#35342D">
+
+            <ImageView
+                android:id="@+id/iconPanierCart"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_cart"
+                app:tint="#FAB005" />
+
+            <TextView
+                android:id="@+id/menuPanierCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Panier"
+                android:textColor="#FAB005"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Profil -->
+        <LinearLayout
+            android:id="@+id/tabProfilCart"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iconProfilCart"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_profile"
+                app:tint="#BAB09C" />
+
+            <TextView
+                android:id="@+id/menuProfilCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profil"
+                android:textColor="#BAB09C"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

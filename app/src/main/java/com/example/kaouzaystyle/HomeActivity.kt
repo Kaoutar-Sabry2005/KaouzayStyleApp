@@ -1,5 +1,6 @@
 package com.example.kaouzaystyle
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -9,8 +10,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
+
 
 class HomeActivity : AppCompatActivity() {
+    private lateinit var searchBar: EditText
 
     private lateinit var caftans: ArrayList<Product>
     private lateinit var djellabas: ArrayList<Product>
@@ -19,36 +25,90 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var recyclerProducts: RecyclerView
 
-    // UI variables
+    // Menu haut
     private lateinit var menuCaftan: TextView
     private lateinit var menuDjellaba: TextView
     private lateinit var menuBabouches: TextView
     private lateinit var menuAccessoires: TextView
-
     private lateinit var underlineCaftan: View
     private lateinit var underlineDjellaba: View
     private lateinit var underlineBabouches: View
     private lateinit var underlineAccessoires: View
+
+    // Menu bas
+    private lateinit var tabAccueil: View
+    private lateinit var tabCategorie: View
+    private lateinit var tabPanier: View
+    private lateinit var tabProfil: View
+
+    private lateinit var iconAccueil: ImageView
+    private lateinit var iconCategorie: ImageView
+    private lateinit var iconPanier: ImageView
+    private lateinit var iconProfil: ImageView
 
     private lateinit var menuAccueil: TextView
     private lateinit var menuCategorie: TextView
     private lateinit var menuPanier: TextView
     private lateinit var menuProfil: TextView
 
-    private lateinit var iconAccueil: ImageView
-    private lateinit var iconCategorie: ImageView
-    private lateinit var iconProfil: ImageView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        recyclerProducts = findViewById(R.id.recyclerProducts)
-        recyclerProducts.layoutManager = LinearLayoutManager(this)
-
+        initViews()
         loadProducts()
+        recyclerProducts.layoutManager = LinearLayoutManager(this)
+        setupClickListeners()
 
-        // Initialisation des vues (Catégories haut)
+        // Valeurs par défaut
+        var defaultCategory = "caftan"
+        var defaultTab = "accueil"
+
+        // Lire les extras depuis l'intent
+        val fromCart = intent.getBooleanExtra("fromCart", false)
+        val activeTab = intent.getStringExtra("activeTab") ?: if (fromCart) "categorie" else "accueil"
+        val openCategory = intent.getStringExtra("openCategory") ?: defaultCategory
+
+        // Réinitialiser l'UI du menu bas
+        // Réinitialiser menu bas
+        resetBottomBarUI()
+
+// Afficher catégorie si nécessaire
+        if (activeTab.lowercase() == "categorie") {
+            when (openCategory.lowercase()) {
+                "caftan" -> { activateCategory(menuCaftan, underlineCaftan); showProducts(caftans) }
+                "djellaba" -> { activateCategory(menuDjellaba, underlineDjellaba); showProducts(djellabas) }
+                "babouches" -> { activateCategory(menuBabouches, underlineBabouches); showProducts(babouches) }
+                "accessoires" -> { activateCategory(menuAccessoires, underlineAccessoires); showProducts(accessoires) }
+                else -> { activateCategory(menuCaftan, underlineCaftan); showProducts(caftans) }
+            }
+        } else {
+            // Pour Accueil ou autre onglet
+            showProducts(caftans)
+            activateCategory(menuCaftan, underlineCaftan)
+        }
+
+// Sélectionner le tab bas
+        when (activeTab.lowercase()) {
+            "accueil" -> selectBottomTab(tabAccueil)
+            "categorie" -> selectBottomTab(tabCategorie)
+            "panier" -> selectBottomTab(tabPanier)
+            "profil" -> selectBottomTab(tabProfil)
+            else -> selectBottomTab(tabAccueil)
+        }
+
+    }
+
+    private fun resetBottomBarUI() {
+        val defaultColor = Color.parseColor("#BAB09C")
+        listOf(tabAccueil, tabCategorie, tabPanier, tabProfil).forEach { it.background = null }
+        listOf(iconAccueil, iconCategorie, iconPanier, iconProfil).forEach { it.setColorFilter(defaultColor) }
+        listOf(menuAccueil, menuCategorie, menuPanier, menuProfil).forEach { it.setTextColor(defaultColor) }
+    }
+
+    private fun initViews() {
+        recyclerProducts = findViewById(R.id.recyclerProducts)
+
         menuCaftan = findViewById(R.id.menuCaftan)
         menuDjellaba = findViewById(R.id.menuDjellaba)
         menuBabouches = findViewById(R.id.menuBabouches)
@@ -59,52 +119,139 @@ class HomeActivity : AppCompatActivity() {
         underlineBabouches = findViewById(R.id.underlineBabouches)
         underlineAccessoires = findViewById(R.id.underlineAccessoires)
 
-        // Initialisation des vues (Menu bas)
+        tabAccueil = findViewById(R.id.tabAccueil)
+        tabCategorie = findViewById(R.id.tabCategorie)
+        tabPanier = findViewById(R.id.tabPanier)
+        tabProfil = findViewById(R.id.tabProfil)
+
+        iconAccueil = findViewById(R.id.iconAccueil)
+        iconCategorie = findViewById(R.id.iconCategorie)
+        iconPanier = findViewById(R.id.iconPanier)
+        iconProfil = findViewById(R.id.iconProfil)
+
         menuAccueil = findViewById(R.id.menuAccueil)
         menuCategorie = findViewById(R.id.menuCategorie)
         menuPanier = findViewById(R.id.menuPanier)
         menuProfil = findViewById(R.id.menuProfil)
 
-        iconAccueil = findViewById(R.id.iconAccueil)
-        iconCategorie = findViewById(R.id.iconCategorie)
-        iconProfil = findViewById(R.id.iconProfil)
+        //la barre de rechreche
+        searchBar = findViewById(R.id.searchBar)
 
-        // État initial
-        showProducts(caftans)
-        activateCategory(menuCaftan, underlineCaftan)
-        activateBottom(menuAccueil, iconAccueil)
+    }
 
-        // Listeners Catégories
+    private fun setupClickListeners() {
+        // Catégories du haut
         menuCaftan.setOnClickListener {
             showProducts(caftans)
             activateCategory(menuCaftan, underlineCaftan)
+            selectBottomTab(tabCategorie)
         }
         menuDjellaba.setOnClickListener {
             showProducts(djellabas)
             activateCategory(menuDjellaba, underlineDjellaba)
+            selectBottomTab(tabCategorie)
         }
         menuBabouches.setOnClickListener {
             showProducts(babouches)
             activateCategory(menuBabouches, underlineBabouches)
+            selectBottomTab(tabCategorie)
         }
         menuAccessoires.setOnClickListener {
             showProducts(accessoires)
             activateCategory(menuAccessoires, underlineAccessoires)
+            selectBottomTab(tabCategorie)
         }
 
-        // Listeners Bas
-        menuAccueil.setOnClickListener {
+        // Menu bas
+        tabAccueil.setOnClickListener {
             showProducts(caftans)
             activateCategory(menuCaftan, underlineCaftan)
-            activateBottom(menuAccueil, iconAccueil)
+            selectBottomTab(tabAccueil)
         }
-        menuCategorie.setOnClickListener { activateBottom(menuCategorie, iconCategorie) }
+        tabCategorie.setOnClickListener {
+            selectBottomTab(tabCategorie)
+            showProducts(caftans)              // Affiche une catégorie par défaut
+            activateCategory(menuCaftan, underlineCaftan)
+        }
+
+        // Onglet Panier
+        tabPanier.setOnClickListener {
+            selectBottomTab(tabPanier)
+            startActivity(Intent(this, PanierActivity::class.java))
+        }
+        tabProfil.setOnClickListener {
+            selectBottomTab(tabProfil)
+            startActivity(Intent(this, ProfilActivity::class.java))
+        }
+        //la barre de rechrech
+        searchBar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterProducts(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+    }
+
+    private fun filterProducts(query: String) {
+        val allProducts = when {
+            menuCaftan.currentTextColor == Color.WHITE -> caftans
+            menuDjellaba.currentTextColor == Color.WHITE -> djellabas
+            menuBabouches.currentTextColor == Color.WHITE -> babouches
+            menuAccessoires.currentTextColor == Color.WHITE -> accessoires
+            else -> caftans
+        }
+
+        val filteredList = allProducts.filter {
+            it.name.contains(query, ignoreCase = true)
+        }
+
+        recyclerProducts.adapter = ProductAdapter(this, ArrayList(filteredList))
+    }
+
+
+
+    private fun selectBottomTab(selectedTab: View) {
+        val defaultColor = Color.parseColor("#BAB09C")
+        val selectedColor = Color.parseColor("#FAB005")
+        val selectedBgColor = Color.parseColor("#35342D")
+
+        // Reset
+        listOf(tabAccueil, tabCategorie, tabPanier, tabProfil).forEach { it.background = null }
+        listOf(iconAccueil, iconCategorie, iconPanier, iconProfil).forEach { it.setColorFilter(defaultColor) }
+        listOf(menuAccueil, menuCategorie, menuPanier, menuProfil).forEach { it.setTextColor(defaultColor) }
+
+        // Appliquer style sélectionné
+        when (selectedTab.id) {
+            R.id.tabAccueil -> { tabAccueil.setBackgroundColor(selectedBgColor); iconAccueil.setColorFilter(selectedColor); menuAccueil.setTextColor(selectedColor) }
+            R.id.tabCategorie -> { tabCategorie.setBackgroundColor(selectedBgColor); iconCategorie.setColorFilter(selectedColor); menuCategorie.setTextColor(selectedColor) }
+            R.id.tabPanier -> { tabPanier.setBackgroundColor(selectedBgColor); iconPanier.setColorFilter(selectedColor); menuPanier.setTextColor(selectedColor) }
+            R.id.tabProfil -> { tabProfil.setBackgroundColor(selectedBgColor); iconProfil.setColorFilter(selectedColor); menuProfil.setTextColor(selectedColor) }
+        }
     }
 
     private fun showProducts(list: ArrayList<Product>) {
         recyclerProducts.adapter = ProductAdapter(this, list)
     }
 
+    private fun activateCategory(selected: TextView, underline: View) {
+        resetCategoryStyles()
+        selected.setTextColor(Color.WHITE)
+        selected.setTypeface(null, Typeface.BOLD)
+        underline.setBackgroundColor(Color.WHITE)
+    }
+
+    private fun resetCategoryStyles() {
+        val gray = Color.parseColor("#D5D0C8")
+        val underlineGray = Color.parseColor("#AFAAA2")
+        listOf(menuCaftan, menuDjellaba, menuBabouches, menuAccessoires).forEach { it.setTextColor(gray); it.setTypeface(null, Typeface.NORMAL) }
+        listOf(underlineCaftan, underlineDjellaba, underlineBabouches, underlineAccessoires).forEach { it.setBackgroundColor(underlineGray) }
+    }
+
+    // === Chargement des produits (inchangé) ===
     private fun loadProducts() {
         // --- COULEURS DE BASE ---
         val colorGreen = Color.parseColor("#006400")
@@ -362,52 +509,5 @@ class HomeActivity : AppCompatActivity() {
                 sizeUnique
             )
         )
-    }
-
-    private fun resetCategoryStyles() {
-        val gray = Color.parseColor("#D5D0C8")
-        val underlineGray = Color.parseColor("#AFAAA2")
-
-        menuCaftan.setTextColor(gray)
-        underlineCaftan.setBackgroundColor(underlineGray)
-        menuDjellaba.setTextColor(gray)
-        underlineDjellaba.setBackgroundColor(underlineGray)
-        menuBabouches.setTextColor(gray)
-        underlineBabouches.setBackgroundColor(underlineGray)
-        menuAccessoires.setTextColor(gray)
-        underlineAccessoires.setBackgroundColor(underlineGray)
-
-        menuCaftan.setTypeface(null, Typeface.NORMAL)
-        menuDjellaba.setTypeface(null, Typeface.NORMAL)
-        menuBabouches.setTypeface(null, Typeface.NORMAL)
-        menuAccessoires.setTypeface(null, Typeface.NORMAL)
-    }
-
-    private fun activateCategory(selected: TextView, underline: View) {
-        resetCategoryStyles()
-        selected.setTextColor(Color.WHITE)
-        selected.setTypeface(null, Typeface.BOLD)
-        underline.setBackgroundColor(Color.WHITE)
-    }
-
-    private fun activateBottom(selected: TextView, icon: ImageView) {
-        val gray = Color.parseColor("#AAAAAA")
-        val dark = Color.parseColor("#181611")
-
-        menuAccueil.setTextColor(gray)
-        menuCategorie.setTextColor(gray)
-        menuPanier.setTextColor(gray)
-        menuProfil.setTextColor(gray)
-        menuAccueil.setBackgroundColor(dark)
-        menuCategorie.setBackgroundColor(dark)
-        menuPanier.setBackgroundColor(dark)
-        menuProfil.setBackgroundColor(dark)
-        iconAccueil.setColorFilter(gray)
-        iconCategorie.setColorFilter(gray)
-        iconProfil.setColorFilter(gray)
-
-        selected.setTextColor(Color.BLACK)
-        icon.setColorFilter(Color.BLACK)
-        selected.setBackgroundColor(Color.WHITE)
     }
 }

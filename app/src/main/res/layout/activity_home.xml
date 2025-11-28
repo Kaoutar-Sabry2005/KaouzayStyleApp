@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#171712"
@@ -30,8 +32,7 @@
         android:layout_height="38dp"
         android:layout_below="@id/brandName"
         android:layout_marginTop="0dp"
-        android:background="@drawable/input_style"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:background="@drawable/input_style">
 
         <!-- Icône recherche -->
         <ImageView
@@ -57,7 +58,6 @@
             android:padding="10dp"
             android:background="@android:color/transparent"/>
     </RelativeLayout>
-
 
     <!-- Menu catégories horizontal -->
     <HorizontalScrollView
@@ -190,106 +190,129 @@
         android:layout_marginTop="10dp"/>
 
     <!-- Menu bas -->
+    <!-- Menu du bas -->
     <LinearLayout
         android:id="@+id/menuBottom"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:background="#26241C"
-        android:weightSum="4">
+        android:background="#26241C">
 
-        <!-- Accueil -->
+        <!-- ACCUEIL -->
         <LinearLayout
+            android:id="@+id/tabAccueil"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+
             <ImageView
                 android:id="@+id/iconAccueil"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/ic_home"
-                android:tint="#BAB09C"/>
+                app:tint="#BAB09C" />
+
             <TextView
                 android:id="@+id/menuAccueil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
                 android:textColor="#BAB09C"
-                android:fontFamily="@font/newsreader_regular"
-                android:textSize="12sp" />
+                android:textSize="11sp"
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- Catégorie -->
+        <!-- CATÉGORIE -->
         <LinearLayout
+            android:id="@+id/tabCategorie"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+
             <ImageView
                 android:id="@+id/iconCategorie"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/ic_categories"
-                android:tint="#BAB09C"/>
+                app:tint="#BAB09C" />
+
             <TextView
                 android:id="@+id/menuCategorie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Catégorie"
                 android:textColor="#BAB09C"
-                android:fontFamily="@font/newsreader_regular"
-                android:textSize="12sp" />
+                android:textSize="11sp"
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- Panier -->
+        <!-- PANIER -->
         <LinearLayout
-            android:id="@+id/iconPanier"
+            android:id="@+id/tabPanier"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:id="@+id/iconPanier"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/ic_cart"
-                android:tint="#BAB09C" />
+                app:tint="#BAB09C" />
+
             <TextView
                 android:id="@+id/menuPanier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Panier"
-                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#BAB09C"
-                android:textSize="12sp" />
+                android:textSize="11sp"
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- Profil -->
+        <!-- PROFIL -->
         <LinearLayout
+            android:id="@+id/tabProfil"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+
             <ImageView
                 android:id="@+id/iconProfil"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:tint="#BAB09C"
-                android:src="@drawable/ic_profile" />
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_profile"
+                app:tint="#BAB09C" />
+
             <TextView
                 android:id="@+id/menuProfil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profil"
                 android:textColor="#BAB09C"
-                android:fontFamily="@font/newsreader_regular"
-                android:textSize="12sp" />
+                android:textSize="11sp"
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
 
     </LinearLayout>

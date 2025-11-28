@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="#1C1C18"
+    android:layout_marginBottom="12dp">
+
+    <!-- IMAGE DU PRODUIT -->
+    <ImageView
+        android:id="@+id/cartItemImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentEnd="true"
+        android:scaleType="centerCrop"
+        android:background="@drawable/rounded_corners"
+        android:src="@drawable/ic_launcher_background" />
+
+    <!-- BLOC INFO -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/cartItemImage"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical">
+
+        <!-- Taille -->
+        <TextView
+            android:id="@+id/cartItemSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Taille: M"
+            android:textColor="#C4C4C4"
+            android:textSize="13sp" />
+
+        <!-- Nom produit -->
+        <TextView
+            android:id="@+id/cartItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Djellaba Marocaine"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <!-- Prix -->
+        <TextView
+            android:id="@+id/cartItemPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="800 MAD"
+            android:textColor="#C4C4C4"
+            android:textSize="15sp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Buttons + / - -->
+        <LinearLayout
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:background="#2F2F2A">
+
+            <TextView
+                android:id="@+id/btnDecrease"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="-"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:background="#F4A100"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tvQuantity"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:background="#1C1C18" />
+
+            <TextView
+                android:id="@+id/btnIncrease"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:background="#F4A100"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
