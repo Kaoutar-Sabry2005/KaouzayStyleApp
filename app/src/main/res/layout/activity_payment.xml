@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1C1C18">
+    android:background="#171712">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Procédure de paiement"
+            android:fontFamily="@font/newsreader_regular"
             android:textSize="22sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
@@ -26,9 +27,10 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Nom complet"
+            android:fontFamily="@font/newsreader_regular"
             android:textColor="#FFFFFF"
-            android:textColorHint="#7D7D7D"
-            android:background="#2F2F2A"
+            android:textColorHint="#BBB19B"
+            android:background="@drawable/input_style"
             android:padding="10dp" />
 
         <!-- Adresse -->
@@ -38,9 +40,10 @@
             android:layout_height="50dp"
             android:hint="Adresse de livraison"
             android:textColor="#FFFFFF"
-            android:textColorHint="#7D7D7D"
+            android:fontFamily="@font/newsreader_regular"
+            android:textColorHint="#BBB19B"
             android:layout_marginTop="12dp"
-            android:background="#2F2F2A"
+            android:background="@drawable/input_style"
             android:padding="10dp" />
         <TextView
             android:id="@+id/tvTotalPayment"
@@ -58,10 +61,11 @@
             android:layout_height="50dp"
             android:hint="Numéro de téléphone"
             android:inputType="phone"
+            android:fontFamily="@font/newsreader_regular"
             android:textColor="#FFFFFF"
-            android:textColorHint="#7D7D7D"
+            android:textColorHint="#BBB19B"
             android:layout_marginTop="12dp"
-            android:background="#2F2F2A"
+            android:background="@drawable/input_style"
             android:padding="10dp" />
 
         <!-- MODE DE PAIEMENT -->
@@ -69,8 +73,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Méthode de paiement"
+            android:fontFamily="@font/newsreader_regular"
             android:textSize="16sp"
-            android:textColor="#FFFFFF"
+            android:textColor="#D5D0C8"
             android:layout_marginTop="25dp" />
 
         <RadioGroup
@@ -84,14 +89,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Paiement à la livraison"
-                android:textColor="#FFFFFF" />
+                android:fontFamily="@font/newsreader_regular"
+                android:textColor="#D5D0C8" />
 
             <RadioButton
                 android:id="@+id/rbCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Carte bancaire"
-                android:textColor="#FFFFFF" />
+                android:textColor="#D5D0C8" />
         </RadioGroup>
 
         <!-- BOUTON VALIDER -->
@@ -100,9 +106,12 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Valider la commande"
-            android:textColor="#FFFFFF"
+            android:fontFamily="@font/newsreader_regular"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="#181611"
             android:textSize="18sp"
-            android:background="#F4A100"
+            android:backgroundTint="@color/kaouzay_gold"
             android:layout_marginTop="28dp"/>
 
     </LinearLayout>

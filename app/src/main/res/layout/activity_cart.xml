@@ -14,16 +14,7 @@
         android:layout_margin="16dp"
         app:tint="#FFFFFF" />
 
-    <!-- Titre -->
-    <TextView
-        android:id="@+id/cartTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Panier"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+
 
     <!-- RecyclerView qui occupe l'espace entre top et summary -->
     <androidx.recyclerview.widget.RecyclerView
@@ -44,14 +35,15 @@
         android:orientation="vertical"
         android:padding="16dp"
         android:layout_above="@id/checkoutButton"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="12dp">
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp">
 
         <TextView
             android:id="@+id/summaryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Totale"
+            android:fontFamily="@font/newsreader_regular"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -70,6 +62,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Sous-total"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
@@ -78,6 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0.00 MAD"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -95,6 +89,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Livraison"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
@@ -103,6 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gratuite"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -120,6 +116,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Total"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
@@ -128,6 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0.00 MAD"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -139,13 +137,16 @@
     <Button
         android:id="@+id/checkoutButton"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="55dp"
         android:text="Procéder au paiement"
-        android:textColor="#000000"
-        android:background="@drawable/rounded_button_yellow"
+        android:fontFamily="@font/newsreader_regular"
         android:textAllCaps="false"
         android:layout_above="@id/bottomMenu"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        android:textStyle="bold"
+        android:textColor="#181611"
+        android:backgroundTint="@color/kaouzay_gold"
+        android:layout_marginBottom="20dp" />
 
     <!-- MENU BAS -->
     <LinearLayout
@@ -178,6 +179,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#BAB09C"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -203,6 +205,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Catégorie"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#BAB09C"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -229,6 +232,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Panier"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#FAB005"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -254,6 +258,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profil"
+                android:fontFamily="@font/newsreader_regular"
                 android:textColor="#BAB09C"
                 android:textSize="12sp" />
         </LinearLayout>

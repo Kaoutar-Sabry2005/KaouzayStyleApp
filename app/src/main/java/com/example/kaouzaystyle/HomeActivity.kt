@@ -73,7 +73,6 @@ class HomeActivity : AppCompatActivity() {
         // Réinitialiser menu bas
         resetBottomBarUI()
 
-// Afficher catégorie si nécessaire
         if (activeTab.lowercase() == "categorie") {
             when (openCategory.lowercase()) {
                 "caftan" -> { activateCategory(menuCaftan, underlineCaftan); showProducts(caftans) }
@@ -326,7 +325,6 @@ class HomeActivity : AppCompatActivity() {
                 listOf(
                     ProductVariant(colorGold, R.drawable.caftansoussijaune),
                     ProductVariant(colorRed, R.drawable.caftansoussirouge),
-                    // Correction ICI : Color.parseColor(...)
                     ProductVariant(Color.parseColor("#FF6F00"), R.drawable.caftansoussiorange)
                 ),
                 sizesVetements
@@ -341,7 +339,6 @@ class HomeActivity : AppCompatActivity() {
                 R.drawable.djellabavert,
                 "Djellaba luxueuse en tissu brocard (jacquard de soie) avec des motifs lilas/mauves, souvent portée par-dessus un kmiss (sous-vêtement).",
                 listOf(
-                    // Corrections ICI pour toutes les couleurs Hex
                     ProductVariant(Color.parseColor("#659797"), R.drawable.djellabavert),
                     ProductVariant(Color.parseColor("#990D6F"), R.drawable.djellabaviolet),
                     ProductVariant(Color.parseColor("#C5C73D"), R.drawable.djellabajaune)
@@ -354,7 +351,6 @@ class HomeActivity : AppCompatActivity() {
                 R.drawable.djellabaorange,
                 "Djellaba à capuche avec de riches broderies ton sur ton et des motifs blancs ou écrus sur le col et les poignets.",
                 listOf(
-                    // Corrections ICI
                     ProductVariant(Color.parseColor("#F84C08"), R.drawable.djellabaorange),
                     ProductVariant(Color.parseColor("#B68977"), R.drawable.djellababeige)
                 ),
@@ -366,7 +362,6 @@ class HomeActivity : AppCompatActivity() {
                 R.drawable.djellaba2,
                 "Djellaba gris clair/beige au style minimaliste, soulignée par une sfifa foncée gris anthracite pour définir la coupe.",
                 listOf(
-                    // Correction ICI
                     ProductVariant(Color.parseColor("#B2B5BA"), R.drawable.djellaba2)
                 ),
                 sizesVetements
@@ -377,7 +372,6 @@ class HomeActivity : AppCompatActivity() {
                 R.drawable.djellaba5,
                 "Djellaba fluide bleu pétrole ou bleu céladon, avec des détails de sfifa assortie ou argentée et une coupe droite.",
                 listOf(
-                    // Correction ICI
                     ProductVariant(Color.parseColor("#6A87AD"), R.drawable.djellaba5)
                 ),
                 listOf("S", "M", "L")
@@ -388,7 +382,6 @@ class HomeActivity : AppCompatActivity() {
                 R.drawable.djellaba4,
                 "Djellaba  oversize avec des galons (sfifas) et un bord de capuche blancs qui contrastent fortement, et des manches en organza brodé.",
                 listOf(
-                    // Corrections ICI
                     ProductVariant(Color.parseColor("#643636"), R.drawable.djellaba4),
                     ProductVariant(Color.parseColor("#6F666B"), R.drawable.djellabagris)
                 ),
@@ -437,7 +430,6 @@ class HomeActivity : AppCompatActivity() {
                 R.drawable.babouche3,
                 "Qualité et durabilité.",
                 listOf(
-                    // Correction ICI
                     ProductVariant(Color.parseColor("#0B0347"), R.drawable.babouche3)
                 ),
                 sizesChaussures

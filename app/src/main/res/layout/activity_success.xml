@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="#1C1C18"
+    android:background="#171712"
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:text="Commande validée !"
         android:textColor="#FFFFFF"
+        android:fontFamily="@font/newsreader_regular"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_marginBottom="30dp"/>
@@ -22,6 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Retour à l'accueil"
+        android:fontFamily="@font/newsreader_regular"
         android:background="#F4A100"
+        android:textStyle="bold"
         android:textColor="#000000"/>
 </LinearLayout>
