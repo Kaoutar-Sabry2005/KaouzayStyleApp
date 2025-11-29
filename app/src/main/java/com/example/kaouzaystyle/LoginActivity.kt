@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
             errorEmail.visibility = View.GONE
             errorPassword.visibility = View.GONE
 
-            // 1. Validation de base
+            // 1. Validation
             if (emailInput.isEmpty() || passwordInput.isEmpty()) {
                 if(emailInput.isEmpty()) {
                     errorEmail.text = "Veuillez remplir l'email"
@@ -48,35 +48,42 @@ class LoginActivity : AppCompatActivity() {
             // --- LECTURE MÉMOIRE ---
             val sharedPref = getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
 
-            // On vérifie si la clé existe vraiment
             val hasAccount = sharedPref.contains("registered_email")
             val registeredEmail = sharedPref.getString("registered_email", "")
             val registeredPassword = sharedPref.getString("registered_password", "")
-            val registeredName = sharedPref.getString("registered_name", "Utilisateur")
 
-            // 2. CAS : Aucun compte n'a jamais été créé sur ce téléphone
+            // Exemple reel d'utilisation d'une VARIABLE NULLABLE
+            // Ici le nom de l’utilisateur peut être NULL si non enregistré
+            val registeredNameNullable: String? =
+                sharedPref.getString("registered_name", null)
+
+            // On utilise l'opérateur Elvis pour donner un nom par défaut
+            val finalName = registeredNameNullable ?: "Utilisateur"
+
+            // 2. Aucun compte
             if (!hasAccount) {
                 errorEmail.text = "Aucun compte n'existe. Veuillez vous inscrire."
                 errorEmail.visibility = View.VISIBLE
                 return@setOnClickListener
             }
 
-            // 3. CAS : Un compte existe, mais l'email saisi n'est pas le bon
+            // 3. Email incorrect
             if (emailInput != registeredEmail) {
                 errorEmail.text = "Cet email ne correspond pas au compte enregistré."
                 errorEmail.visibility = View.VISIBLE
                 return@setOnClickListener
             }
 
-            // 4. CAS : Email bon, mais Mot de passe incorrect
+            // 4. Mot de passe incorrect
             if (passwordInput != registeredPassword) {
                 errorPassword.text = "Mot de passe incorrect"
                 errorPassword.visibility = View.VISIBLE
                 return@setOnClickListener
             }
 
-            // 5. TOUT EST BON (Succès)
-            Toast.makeText(this, "Bienvenue $registeredName !", Toast.LENGTH_SHORT).show()
+            // 5. Succès — finalName utilise une variable nullable
+            Toast.makeText(this, "Bienvenue $finalName !", Toast.LENGTH_SHORT).show()
+
             val intent = Intent(this, HomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)

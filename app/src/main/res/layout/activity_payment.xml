@@ -111,6 +111,30 @@
                 android:text="Carte bancaire"
                 android:textColor="#D5D0C8"
                 android:buttonTint="@color/kaouzay_gold"/>
+            <!-- ZONE DE CARTE BANCAIRE (cachée au début) -->
+            <LinearLayout
+                android:id="@+id/cardInfoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="15dp">
+
+                <EditText
+                    android:id="@+id/etCardNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Numéro de carte"
+                    android:inputType="number"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#BBB19B"
+                    android:background="@drawable/input_style"
+                    android:padding="10dp" />
+
+
+
+            </LinearLayout>
+
         </RadioGroup>
 
         <TextView
