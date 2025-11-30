@@ -492,7 +492,7 @@ class HomeActivity : AppCompatActivity() {
                 R.drawable.accessoire5,
                 "Bracelet traditionnel en argent décoré d’émail coloré et de pierres pour un style artisanal authentique.",
                 listOf(
-                    ProductVariant(colorBlue, R.drawable.accessoire1)
+                    ProductVariant(colorBlue, R.drawable.accessoire5)
                 ),
                 sizeUnique
             ),
