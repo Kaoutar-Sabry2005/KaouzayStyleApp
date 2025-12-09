@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/kaouzay_background_dark"
-    tools:context=".MainActivity">
+    tools:context=".ui.home.MainActivity">
 
     <!-- Ligne guide pour le haut du logo : ajustée pour être plus proche du haut -->
     <androidx.constraintlayout.widget.Guideline

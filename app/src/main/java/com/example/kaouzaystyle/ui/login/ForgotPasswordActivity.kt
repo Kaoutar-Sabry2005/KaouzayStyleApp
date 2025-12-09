@@ -1,13 +1,15 @@
-package com.example.kaouzaystyle
+package com.example.kaouzaystyle.ui.login
 
 import android.os.Bundle
+import android.util.Patterns
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.view.View
+import com.example.kaouzaystyle.R
 
 class ForgotPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +40,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 errorEmail.text = "Veuillez entrer votre adresse e-mail"
                 errorEmail.visibility = View.VISIBLE
                 isValid = false
-            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 errorEmail.text = "Veuillez entrer une adresse e-mail valide"
                 errorEmail.visibility = View.VISIBLE
                 isValid = false

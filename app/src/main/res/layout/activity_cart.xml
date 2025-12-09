@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#171712">
 
-    <!-- Bouton retour -->
+    <!-- Bouton retour (En haut à gauche) -->
     <ImageView
         android:id="@+id/cartBackButton"
         android:layout_width="30dp"
@@ -14,9 +14,21 @@
         android:layout_margin="16dp"
         app:tint="#FFFFFF" />
 
+    <!-- Bouton Vider (En haut à droite, juste l'icône jaune) -->
+    <ImageView
+        android:id="@+id/clearCartButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/baseline_delete_24"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:tint="#FAB005"
+        android:clickable="true"
+        android:focusable="true" />
 
-
-    <!-- RecyclerView qui occupe l'espace entre top et summary -->
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cartRecyclerView"
         android:layout_width="match_parent"
@@ -34,9 +46,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:layout_above="@id/checkoutButton"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp">
+        android:layout_above="@id/checkoutButton">
 
         <TextView
             android:id="@+id/summaryTitle"

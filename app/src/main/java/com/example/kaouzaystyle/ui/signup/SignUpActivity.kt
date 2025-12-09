@@ -1,6 +1,5 @@
-package com.example.kaouzaystyle
+package com.example.kaouzaystyle.ui.signup
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -10,6 +9,12 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope // Nécessaire pour les coroutines
+import com.example.kaouzaystyle.R
+import com.example.kaouzaystyle.data.local.database.AppDatabase
+import com.example.kaouzaystyle.data.local.entity.User
+import com.example.kaouzaystyle.ui.login.LoginActivity
+import kotlinx.coroutines.launch
 
 class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,12 +33,16 @@ class SignUpActivity : AppCompatActivity() {
         val errorPassword = findViewById<TextView>(R.id.errorPassword)
         val errorConfirmPassword = findViewById<TextView>(R.id.errorConfirmPassword)
 
+        // Instance de la DB
+        val db = AppDatabase.getInstance(this)
+
         btnSignUp.setOnClickListener {
             val name = editName.text.toString().trim()
             val email = editEmail.text.toString().trim()
             val password = editPassword.text.toString()
             val confirmPassword = editConfirmPassword.text.toString()
 
+            // Reset erreurs
             errorName.visibility = View.GONE
             errorEmail.visibility = View.GONE
             errorPassword.visibility = View.GONE
@@ -78,24 +87,31 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             if (isValid) {
-                // --- SAUVEGARDE DES DONNÉES DANS LE TÉLÉPHONE ---
-                val sharedPref = getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
-                val editor = sharedPref.edit()
-                editor.putString("registered_name", name)
-                editor.putString("registered_email", email)
-                editor.putString("registered_password", password)
-                // On peut aussi initier le téléphone et l'adresse à vide
-                editor.putString("registered_phone", "")
-                editor.putString("registered_address", "")
-                editor.apply()
+                // --- INSERTION DANS ROOM ---
+                lifecycleScope.launch {
+                    // 1. Vérifier si l'email existe déjà
+                    val existingUser = db.userDao().getUserByEmail(email)
+                    if (existingUser != null) {
+                        errorEmail.text = "Cet email est déjà utilisé"
+                        errorEmail.visibility = View.VISIBLE
+                    } else {
+                        // 2. Créer l'utilisateur
+                        val newUser = User(
+                            name = name,
+                            email = email,
+                            password = password
+                        )
+                        db.userDao().registerUser(newUser)
 
-                Toast.makeText(this, "Inscription réussie !", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@SignUpActivity, "Inscription réussie !", Toast.LENGTH_SHORT).show()
 
-                // Redirection
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-                finish()
+                        // Redirection
+                        val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        finish()
+                    }
+                }
             }
         }
 

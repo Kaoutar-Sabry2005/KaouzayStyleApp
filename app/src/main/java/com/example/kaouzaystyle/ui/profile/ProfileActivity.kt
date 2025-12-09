@@ -1,12 +1,12 @@
-package com.example.kaouzaystyle
+package com.example.kaouzaystyle.ui.profile
 
-import android.content.Context
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kaouzaystyle.R
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -23,7 +23,7 @@ class ProfileActivity : AppCompatActivity() {
         val backButton = findViewById<ImageView>(R.id.backButton)
 
         // 1. Charger les données (On utilise les clés définies dans SignUp)
-        val sharedPref = getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("UserProfile", MODE_PRIVATE)
 
         editName.setText(sharedPref.getString("registered_name", ""))
         editEmail.setText(sharedPref.getString("registered_email", ""))

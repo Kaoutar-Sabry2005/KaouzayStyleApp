@@ -1,9 +1,19 @@
-package com.example.kaouzaystyle
+package com.example.kaouzaystyle.ui.panier
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kaouzaystyle.CartManager
+import com.example.kaouzaystyle.R
+import com.example.kaouzaystyle.ui.panier.SuccessActivity
 
 class PaymentActivity : AppCompatActivity() {
 

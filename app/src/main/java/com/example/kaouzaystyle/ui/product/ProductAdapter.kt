@@ -1,4 +1,4 @@
-package com.example.kaouzaystyle
+package com.example.kaouzaystyle.ui.product
 
 import android.content.Context
 import android.content.Intent
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kaouzaystyle.Product
+import com.example.kaouzaystyle.R
 
 class ProductAdapter(
     private val context: Context,

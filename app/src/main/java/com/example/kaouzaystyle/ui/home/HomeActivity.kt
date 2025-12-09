@@ -1,4 +1,4 @@
-package com.example.kaouzaystyle
+package com.example.kaouzaystyle.ui.home
 
 import android.content.Intent
 import android.graphics.Color
@@ -13,6 +13,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kaouzaystyle.R
+import com.example.kaouzaystyle.Product
+import com.example.kaouzaystyle.ui.product.ProductAdapter
+import com.example.kaouzaystyle.ProductVariant
+import com.example.kaouzaystyle.ui.panier.PanierActivity
+import com.example.kaouzaystyle.ui.profile.ProfileActivity
 
 class HomeActivity : AppCompatActivity() {
 
@@ -58,49 +64,69 @@ class HomeActivity : AppCompatActivity() {
         initViews()
         loadProducts()
         recyclerProducts.layoutManager = LinearLayoutManager(this)
+
         setupClickListeners()
 
-        // Valeurs par défaut pour la navigation
-        var defaultCategory = "caftan"
-        var defaultTab = "accueil"
+        // Gestion initiale de la navigation
+        handleNavigationIntent()
+    }
 
-        // Lire les extras depuis l'intent (pour savoir si on vient du panier ou autre)
-        val fromCart = intent.getBooleanExtra("fromCart", false)
-        val activeTab = intent.getStringExtra("activeTab") ?: if (fromCart) "categorie" else "accueil"
-        val openCategory = intent.getStringExtra("openCategory") ?: defaultCategory
+    // --- CORRECTION 1 : Gère les clics venant du menu du Panier ---
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent) // Met à jour l'intent courant
+        handleNavigationIntent()
+    }
 
-        // Réinitialiser menu bas
+    // --- CORRECTION 2 : Gère le retour arrière (flèche du téléphone) ---
+    override fun onResume() {
+        super.onResume()
+        // Force la mise à jour visuelle pour être sûr qu'on est sur Accueil ou Catégorie
+        // et JAMAIS sur Panier ou Profil (puisqu'on est dans HomeActivity)
+        handleNavigationIntent()
+    }
+
+    // --- LOGIQUE DE NAVIGATION CENTRALISÉE ---
+    private fun handleNavigationIntent() {
+        val intent = intent
+        // On récupère les infos. Si null, valeurs par défaut.
+        val activeTab = intent?.getStringExtra("activeTab") ?: "accueil"
+        val openCategory = intent?.getStringExtra("openCategory") ?: "caftan"
+
+        // 1. On remet tout à zéro (gris)
         resetBottomBarUI()
 
-        // Gérer l'affichage selon l'onglet actif demandé
+        // 2. On applique la logique
         if (activeTab.lowercase() == "categorie") {
+            // Cas : Onglet Catégorie
+            selectBottomTab(tabCategorie)
+
+            // Ouvrir la bonne sous-catégorie
             when (openCategory.lowercase()) {
-                "caftan" -> { activateCategory(menuCaftan, underlineCaftan); showProducts(caftans) }
                 "djellaba" -> { activateCategory(menuDjellaba, underlineDjellaba); showProducts(djellabas) }
                 "babouches" -> { activateCategory(menuBabouches, underlineBabouches); showProducts(babouches) }
                 "accessoires" -> { activateCategory(menuAccessoires, underlineAccessoires); showProducts(accessoires) }
                 else -> { activateCategory(menuCaftan, underlineCaftan); showProducts(caftans) }
             }
         } else {
-            // Pour Accueil ou autre onglet par défaut
-            showProducts(caftans)
-            activateCategory(menuCaftan, underlineCaftan)
-        }
+            // Cas : Onglet Accueil (Par défaut)
+            selectBottomTab(tabAccueil)
 
-        // Sélectionner le tab bas visuellement
-        when (activeTab.lowercase()) {
-            "accueil" -> selectBottomTab(tabAccueil)
-            "categorie" -> selectBottomTab(tabCategorie)
-            "panier" -> selectBottomTab(tabPanier)
-            "profil" -> selectBottomTab(tabProfil)
-            else -> selectBottomTab(tabAccueil)
+            // On garde la catégorie visuelle qui était déjà active, ou on met Caftan par défaut
+            if (::menuDjellaba.isInitialized && menuDjellaba.currentTextColor == Color.WHITE) showProducts(djellabas)
+            else if (::menuBabouches.isInitialized && menuBabouches.currentTextColor == Color.WHITE) showProducts(babouches)
+            else if (::menuAccessoires.isInitialized && menuAccessoires.currentTextColor == Color.WHITE) showProducts(accessoires)
+            else { activateCategory(menuCaftan, underlineCaftan); showProducts(caftans) }
         }
     }
 
     private fun resetBottomBarUI() {
         val defaultColor = Color.parseColor("#BAB09C")
+        // Reset backgrounds
         listOf(tabAccueil, tabCategorie, tabPanier, tabProfil).forEach { it.background = null }
+        // Reset icônes
         listOf(iconAccueil, iconCategorie, iconPanier, iconProfil).forEach { it.setColorFilter(defaultColor) }
+        // Reset textes
         listOf(menuAccueil, menuCategorie, menuPanier, menuProfil).forEach { it.setTextColor(defaultColor) }
     }
 
@@ -167,10 +193,10 @@ class HomeActivity : AppCompatActivity() {
             selectBottomTab(tabAccueil)
         }
 
-        // 2. Catégorie (reste sur la vue actuelle mais active l'onglet)
+        // 2. Catégorie
         tabCategorie.setOnClickListener {
             selectBottomTab(tabCategorie)
-            // On peut soit garder la vue actuelle, soit réinitialiser sur Caftan
+            // Si on clique sur Catégorie, on s'assure qu'une liste est affichée
             if (menuCaftan.currentTextColor != Color.WHITE &&
                 menuDjellaba.currentTextColor != Color.WHITE &&
                 menuBabouches.currentTextColor != Color.WHITE &&
@@ -182,14 +208,14 @@ class HomeActivity : AppCompatActivity() {
 
         // 3. Panier -> Ouvre CartActivity
         tabPanier.setOnClickListener {
-            selectBottomTab(tabPanier)
+            // CORRECTION : On NE change PAS la couleur ici.
+            // On lance juste l'activité. HomeActivity restera en pause derrière.
             startActivity(Intent(this, PanierActivity::class.java))
         }
 
         // 4. Profil -> Ouvre ProfileActivity
         tabProfil.setOnClickListener {
-            selectBottomTab(tabProfil)
-            // Lien vers la nouvelle page ProfileActivity
+            // CORRECTION : Idem, on ne change pas la couleur ici.
             startActivity(Intent(this, ProfileActivity::class.java))
         }
 
@@ -202,6 +228,7 @@ class HomeActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
     }
+
 
     private fun filterProducts(query: String) {
         // Détecter la catégorie active pour filtrer dedans

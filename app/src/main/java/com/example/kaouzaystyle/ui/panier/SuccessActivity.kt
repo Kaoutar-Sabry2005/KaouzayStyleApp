@@ -1,10 +1,11 @@
-package com.example.kaouzaystyle
+package com.example.kaouzaystyle.ui.panier
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
-import android.widget.Button
 import android.content.Intent
+import android.os.Bundle
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import com.example.kaouzaystyle.R
+import com.example.kaouzaystyle.ui.home.HomeActivity
 
 class SuccessActivity : AppCompatActivity() {
 
