@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#171712">
+
+    <!-- En-tête : Bouton Retour + Titre -->
+    <LinearLayout
+        android:id="@+id/headerFav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/btnBackFav"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="#FFFFFF"
+            android:contentDescription="Retour"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mes Favoris"
+            android:fontFamily="@font/newsreader_regular"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            android:textColor="#FFFFFF"/>
+    </LinearLayout>
+
+    <!-- Liste des favoris -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerFavorites"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerFav"
+        android:layout_above="@id/bottomMenuFav"
+        android:padding="16dp"
+        android:clipToPadding="false"/>
+
+    <!-- MENU BAS (Identique au Panier pour la navigation) -->
+    <LinearLayout
+        android:id="@+id/bottomMenuFav"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="#1F1F1F"
+        android:padding="8dp">
+
+        <!-- Accueil -->
+        <LinearLayout
+            android:id="@+id/tabAccueilFav"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_home"
+                app:tint="#BAB09C" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accueil"
+                android:fontFamily="@font/newsreader_regular"
+                android:textColor="#BAB09C"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Catégorie -->
+        <LinearLayout
+            android:id="@+id/tabCategorieFav"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_categories"
+                app:tint="#BAB09C" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Catégorie"
+                android:fontFamily="@font/newsreader_regular"
+                android:textColor="#BAB09C"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Panier -->
+        <LinearLayout
+            android:id="@+id/tabPanierFav"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_cart"
+                app:tint="#BAB09C" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Panier"
+                android:fontFamily="@font/newsreader_regular"
+                android:textColor="#BAB09C"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Profil (On peut considérer que Favoris fait partie du profil, donc on peut le laisser actif ou neutre) -->
+        <LinearLayout
+            android:id="@+id/tabProfilFav"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_profile"
+                app:tint="#BAB09C" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profil"
+                android:fontFamily="@font/newsreader_regular"
+                android:textColor="#BAB09C"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

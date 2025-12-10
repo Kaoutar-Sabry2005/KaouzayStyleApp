@@ -50,6 +50,7 @@
         <activity
             android:name=".ui.profile.ProfileActivity"
             android:exported="false" />
+        <activity android:name=".ui.favorite.FavoritesActivity" />
     </application>
 
 </manifest>

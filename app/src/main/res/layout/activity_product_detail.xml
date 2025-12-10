@@ -7,14 +7,16 @@
     android:background="#171712"
     tools:context=".ui.product.ProductDetailActivity">
 
-    <!-- Barre supérieure avec flèche retour -->
+    <!-- 1. BARRE DU HAUT (Bouton Retour) -->
     <RelativeLayout
         android:id="@+id/detailTopBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingEnd="16dp"
+        android:elevation="10dp">
+        <!-- elevation pour être sur que le retour est cliquable -->
 
         <ImageView
             android:id="@+id/backButton"
@@ -27,10 +29,9 @@
             android:focusable="true"
             android:src="@drawable/ic_arrow_back"
             app:tint="#FFFFFF" />
-
     </RelativeLayout>
 
-    <!-- Contenu défilant -->
+    <!-- 2. CONTENU QUI DÉFILE -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,29 +43,51 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Image du produit (chargée dynamiquement) -->
-            <ImageView
-                android:id="@+id/productDetailImage"
+            <!-- ICI LA CORRECTION : FrameLayout pour superposer Image + Cœur -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="Image du produit" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
 
+                <!-- L'image du produit (En dessous) -->
+                <ImageView
+                    android:id="@+id/productDetailImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Image du produit" />
+
+                <!-- Le Cœur (Par dessus, en haut à droite) -->
+                <ImageView
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/btnfavorite"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:padding="10dp"
+                    android:background="@drawable/size_button_background"
+                    android:elevation="5dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="Ajouter aux favoris" />
+                <!-- Note: on écrit @drawable/btnfavorite sans le .xml -->
+            </FrameLayout>
 
             <!-- Nom du produit -->
             <TextView
                 android:id="@+id/productDetailName"
                 android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nom du produit"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/newsreader_regular"
-            android:layout_marginBottom="8dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp" />
+                android:layout_height="wrap_content"
+                android:text="Nom du produit"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/newsreader_regular"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
 
             <!-- Prix du produit -->
             <TextView
@@ -92,12 +115,10 @@
                 android:layout_marginBottom="24dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-
                 android:ellipsize="none"
                 android:scrollHorizontally="false"
                 android:singleLine="false"
-                android:inputType="textMultiLine"
-                />
+                android:inputType="textMultiLine" />
 
             <!-- Section Taille -->
             <TextView
@@ -120,56 +141,7 @@
                 android:layout_marginBottom="24dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp">
-
-                <Button
-                    android:id="@+id/sizeS"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/size_button_background"
-                    android:text="S"
-                    android:textColor="@color/size_button_text_color"
-                    android:textSize="16sp" />
-                <Button
-                    android:id="@+id/sizeM"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/size_button_background"
-                    android:text="M"
-                    android:textColor="@color/size_button_text_color"
-                    android:textSize="16sp" />
-                <Button
-                    android:id="@+id/sizeL"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/size_button_background"
-                    android:text="L"
-                    android:textColor="@color/size_button_text_color"
-                    android:textSize="16sp" />
-                <Button
-                    android:id="@+id/sizeXL"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/size_button_background"
-                    android:text="XL"
-                    android:textColor="@color/size_button_text_color"
-                    android:textSize="16sp" />
-                <Button
-                    android:id="@+id/size2XL"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/size_button_background"
-                    android:text="2XL"
-                    android:textColor="@color/size_button_text_color"
-                    android:textSize="16sp" />
+                <!-- Les boutons sont générés par le code Kotlin -->
             </LinearLayout>
 
             <!-- Section Couleur -->
@@ -193,12 +165,13 @@
                 android:layout_marginBottom="32dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp">
+                <!-- Les ronds sont générés par le code Kotlin -->
             </LinearLayout>
-
 
         </LinearLayout>
     </ScrollView>
 
+    <!-- 3. BOUTONS BAS (Ajouter / Acheter) -->
     <LinearLayout
         android:id="@+id/bottomNavContainer"
         android:layout_width="match_parent"

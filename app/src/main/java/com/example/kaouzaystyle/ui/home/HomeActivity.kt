@@ -6,13 +6,14 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope // Pour lancer le téléchargement
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kaouzaystyle.R
@@ -20,13 +21,15 @@ import com.example.kaouzaystyle.Product
 import com.example.kaouzaystyle.ui.product.ProductAdapter
 import com.example.kaouzaystyle.ui.panier.PanierActivity
 import com.example.kaouzaystyle.ui.profile.ProfileActivity
-import com.example.kaouzaystyle.data.remote.RetrofitClient // Importez votre client API
+import com.example.kaouzaystyle.ui.favorite.FavoritesActivity // Assure-toi d'avoir créé cette activité
+import com.example.kaouzaystyle.data.remote.RetrofitClient
 import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var searchBar: EditText
 
+    // Listes initialisées vides pour éviter les erreurs null
     private var caftans: ArrayList<Product> = ArrayList()
     private var djellabas: ArrayList<Product> = ArrayList()
     private var babouches: ArrayList<Product> = ArrayList()
@@ -34,7 +37,7 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var recyclerProducts: RecyclerView
 
-    // Menu haut
+    // Menu haut (Catégories)
     private lateinit var menuCaftan: TextView
     private lateinit var menuDjellaba: TextView
     private lateinit var menuBabouches: TextView
@@ -44,7 +47,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var underlineBabouches: View
     private lateinit var underlineAccessoires: View
 
-    // Menu bas
+    // Menu bas (Navigation)
     private lateinit var tabAccueil: View
     private lateinit var tabCategorie: View
     private lateinit var tabPanier: View
@@ -60,6 +63,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var menuPanier: TextView
     private lateinit var menuProfil: TextView
 
+    // Bouton Favoris (Cœur en haut)
+    private lateinit var iconGoToFavorites: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -69,35 +75,44 @@ class HomeActivity : AppCompatActivity() {
 
         setupClickListeners()
 
+        // On lance le téléchargement.
+        // L'affichage se mettra à jour automatiquement une fois fini.
         fetchProductsFromApi()
     }
 
-    // Fonction pour télécharger le JSON
+    // --- TÉLÉCHARGEMENT API ---
     private fun fetchProductsFromApi() {
         lifecycleScope.launch {
             try {
+                // 1. Récupération des données
                 val response = RetrofitClient.instance.getProducts()
-                val allProducts = response.products // La liste complète
+                val allProducts = response.products // Ou response.caftans selon ton modèle JSON final
 
+                // 2. Filtrage des catégories (adapté à ton JSON)
                 caftans = ArrayList(allProducts.filter { it.category.equals("caftan", ignoreCase = true) })
                 djellabas = ArrayList(allProducts.filter { it.category.equals("djellaba", ignoreCase = true) })
                 babouches = ArrayList(allProducts.filter { it.category.equals("babouche", ignoreCase = true) })
 
-                // Attention : dans votre JSON c'est "accessoires" (pluriel)
+                // "contains" permet de gérer "accessoire" et "accessoires"
                 accessoires = ArrayList(allProducts.filter { it.category.contains("accessoire", ignoreCase = true) })
 
+                // 3. Mise à jour de l'interface MAINTENANT que les données sont là
                 handleNavigationIntent()
 
-                android.util.Log.d("API_SUCCESS", "Reçu ${allProducts.size} produits au total")
+                Log.d("API_SUCCESS", "Produits chargés : ${allProducts.size}")
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                android.util.Log.e("API_ERROR", "Erreur: ${e.message}")
-                Toast.makeText(this@HomeActivity, "Erreur chargement: ${e.message}", Toast.LENGTH_LONG).show()
+                Log.e("API_ERROR", "Erreur: ${e.message}")
+                Toast.makeText(this@HomeActivity, "Erreur connexion: Vérifiez Internet", Toast.LENGTH_LONG).show()
+
+                // Même en cas d'erreur, on essaie d'afficher l'interface (sera vide mais ne crash pas)
+                handleNavigationIntent()
             }
         }
     }
 
+    // --- NAVIGATION ---
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -106,7 +121,10 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        handleNavigationIntent()
+        // Permet de rafraîchir la sélection si on revient en arrière
+        if (caftans.isNotEmpty()) { // Petite optimisation : on ne rafraichit que si on a des données
+            handleNavigationIntent()
+        }
     }
 
     private fun handleNavigationIntent() {
@@ -125,7 +143,10 @@ class HomeActivity : AppCompatActivity() {
                 else -> { activateCategory(menuCaftan, underlineCaftan); showProducts(caftans) }
             }
         } else {
+            // Par défaut : Accueil
             selectBottomTab(tabAccueil)
+
+            // Logique pour garder la catégorie active ou revenir à Caftan par défaut
             if (::menuDjellaba.isInitialized && menuDjellaba.currentTextColor == Color.WHITE) showProducts(djellabas)
             else if (::menuBabouches.isInitialized && menuBabouches.currentTextColor == Color.WHITE) showProducts(babouches)
             else if (::menuAccessoires.isInitialized && menuAccessoires.currentTextColor == Color.WHITE) showProducts(accessoires)
@@ -142,30 +163,47 @@ class HomeActivity : AppCompatActivity() {
 
     private fun initViews() {
         recyclerProducts = findViewById(R.id.recyclerProducts)
+
+        // Menus Haut
         menuCaftan = findViewById(R.id.menuCaftan)
         menuDjellaba = findViewById(R.id.menuDjellaba)
         menuBabouches = findViewById(R.id.menuBabouches)
         menuAccessoires = findViewById(R.id.menuAccessoires)
+
         underlineCaftan = findViewById(R.id.underlineCaftan)
         underlineDjellaba = findViewById(R.id.underlineDjellaba)
         underlineBabouches = findViewById(R.id.underlineBabouches)
         underlineAccessoires = findViewById(R.id.underlineAccessoires)
+
+        // Menus Bas
         tabAccueil = findViewById(R.id.tabAccueil)
         tabCategorie = findViewById(R.id.tabCategorie)
         tabPanier = findViewById(R.id.tabPanier)
         tabProfil = findViewById(R.id.tabProfil)
+
         iconAccueil = findViewById(R.id.iconAccueil)
         iconCategorie = findViewById(R.id.iconCategorie)
         iconPanier = findViewById(R.id.iconPanier)
         iconProfil = findViewById(R.id.iconProfil)
+
         menuAccueil = findViewById(R.id.menuAccueil)
         menuCategorie = findViewById(R.id.menuCategorie)
         menuPanier = findViewById(R.id.menuPanier)
         menuProfil = findViewById(R.id.menuProfil)
+
         searchBar = findViewById(R.id.searchBar)
+
+        // IMPORTANT : Bouton Favoris (Ajouté dans le XML précédent)
+        // Utilisation de try/catch au cas où tu as oublié de le mettre dans le XML
+        try {
+            iconGoToFavorites = findViewById(R.id.iconGoToFavorites)
+        } catch (e: Exception) {
+            Log.e("HomeActivity", "Attention: iconGoToFavorites non trouvé dans le XML")
+        }
     }
 
     private fun setupClickListeners() {
+        // --- Catégories Haut ---
         menuCaftan.setOnClickListener {
             showProducts(caftans)
             activateCategory(menuCaftan, underlineCaftan)
@@ -187,7 +225,9 @@ class HomeActivity : AppCompatActivity() {
             selectBottomTab(tabCategorie)
         }
 
+        // --- Menu Bas ---
         tabAccueil.setOnClickListener {
+            // Retour à l'accueil affiche souvent les Caftans par défaut ou reste sur la sélection
             showProducts(caftans)
             activateCategory(menuCaftan, underlineCaftan)
             selectBottomTab(tabAccueil)
@@ -195,6 +235,7 @@ class HomeActivity : AppCompatActivity() {
 
         tabCategorie.setOnClickListener {
             selectBottomTab(tabCategorie)
+            // Si aucune catégorie active, on met caftan
             if (menuCaftan.currentTextColor != Color.WHITE &&
                 menuDjellaba.currentTextColor != Color.WHITE &&
                 menuBabouches.currentTextColor != Color.WHITE &&
@@ -212,6 +253,14 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
 
+        // --- Clic sur le Cœur (Favoris) ---
+        if (::iconGoToFavorites.isInitialized) {
+            iconGoToFavorites.setOnClickListener {
+                startActivity(Intent(this, FavoritesActivity::class.java))
+            }
+        }
+
+        // --- Recherche ---
         searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -280,6 +329,4 @@ class HomeActivity : AppCompatActivity() {
             it.setBackgroundColor(underlineGray)
         }
     }
-
-    // La fonction loadProducts() hardcodée a été supprimée et remplacée par fetchProductsFromApi()
 }
