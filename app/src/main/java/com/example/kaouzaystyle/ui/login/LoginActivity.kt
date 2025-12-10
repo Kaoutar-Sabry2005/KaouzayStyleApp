@@ -34,7 +34,6 @@ class LoginActivity : AppCompatActivity() {
             val emailInput = emailEdit.text.toString().trim()
             val passwordInput = passwordEdit.text.toString()
 
-            // Reset erreurs
             errorEmail.visibility = View.GONE
             errorPassword.visibility = View.GONE
 
@@ -52,14 +51,11 @@ class LoginActivity : AppCompatActivity() {
 
             // --- VÉRIFICATION ROOM ---
             lifecycleScope.launch {
-                // 1. Chercher l'utilisateur avec cet email et ce mot de passe
                 val user = db.userDao().login(emailInput, passwordInput)
 
                 if (user != null) {
-                    // SUCCÈS : Utilisateur trouvé
                     Toast.makeText(this@LoginActivity, "Bienvenue ${user.name} !", Toast.LENGTH_SHORT).show()
 
-                    // On sauvegarde le fait qu'il est connecté dans SharedPreferences (Session)
                     val sharedPref = getSharedPreferences("UserProfile", MODE_PRIVATE)
                     val editor = sharedPref.edit()
                     editor.putBoolean("is_logged_in", true)
@@ -74,8 +70,7 @@ class LoginActivity : AppCompatActivity() {
                     finish()
 
                 } else {
-                    // ECHEC : Soit email faux, soit mot de passe faux, soit compte inexistant
-                    // Pour savoir si c'est le compte ou le mot de passe, on peut faire une 2ème requete
+
                     val userByEmail = db.userDao().getUserByEmail(emailInput)
 
                     if (userByEmail == null) {

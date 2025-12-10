@@ -58,8 +58,17 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    // ViewModel + LiveData
+    // Pour télécharger le JSON (Retrofit + Gson)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+// Pour afficher les images depuis une URL (Glide)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    val room_version = "2.6.1" // Ou la version que vous utilisez
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version") // <--- CELLE-CI EST OBLIGATOIRE POUR FLOW
+    kapt("androidx.room:room-compiler:$room_version")
 
-
+    // Pour les coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
 }

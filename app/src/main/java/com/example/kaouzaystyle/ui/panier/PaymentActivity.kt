@@ -100,7 +100,7 @@ class PaymentActivity : AppCompatActivity() {
 
             }
 
-            // Si tout est bon → valider la commande
+            // Si tout est bon: valider la commande
             CartManager.clearCart()
 
             val intent = Intent(this, SuccessActivity::class.java)

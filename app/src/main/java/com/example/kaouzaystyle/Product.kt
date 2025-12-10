@@ -1,19 +1,38 @@
 package com.example.kaouzaystyle
 
+import android.graphics.Color
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-// Classe pour une variante (Couleur + Image associée)
-data class ProductVariant(
-    val colorInt: Int,
-    val imageResId: Int
+data class Product(
+    val id: String,
+
+    @SerializedName("title")
+    val name: String,
+
+    val price: Double,
+
+    @SerializedName("main_image")
+    val imageUrl: String,
+
+    val description: String,
+    val category: String,
+
+    val variants: List<ProductVariant> = emptyList(),
+    val sizes: List<String> = emptyList()
 ) : Serializable
 
-// Classe principale Produit
-data class Product(
-    val name: String,
-    val price: String,
-    val image: Int,          // Image par défaut (utilisée dans la liste d'accueil)
-    val description: String,
-    val variants: List<ProductVariant>, // Liste des variantes de couleurs
-    val availableSizes: List<String>    // Liste des tailles (S, M, 36, 40...)
-) : Serializable
+data class ProductVariant(
+    @SerializedName("color")
+    val colorHex: String,
+
+    @SerializedName("image")
+    val imageUrl: String
+) : Serializable {
+    val color: Int
+        get() = try {
+            Color.parseColor(colorHex)
+        } catch (e: Exception) {
+            Color.GRAY
+        }
+}

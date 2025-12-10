@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.kaouzaystyle.Product
 import com.example.kaouzaystyle.R
 
@@ -21,8 +22,6 @@ class ProductAdapter(
         val name: TextView = view.findViewById(R.id.productName)
         val price: TextView = view.findViewById(R.id.productPrice)
 
-        // Dans ProductAdapter.kt
-
         init {
             view.setOnClickListener {
                 val position = adapterPosition
@@ -30,16 +29,13 @@ class ProductAdapter(
                     val product = productList[position]
                     val intent = Intent(context, ProductDetailActivity::class.java).apply {
                         putExtra("product_name", product.name)
-                        putExtra("product_price", product.price)
-                        putExtra("product_image_res_id", product.image)
+                        // On convertit le prix (Double) en String pour l'envoyer
+                        putExtra("product_price", product.price.toString())
+                        putExtra("product_image_url", product.imageUrl)
                         putExtra("product_description", product.description)
-
-                        // CORRECTION ICI : On utilise variants et non plus availableColors
-                        // On cast en ArrayList pour que putSerializableExtra fonctionne bien
+                        // On passe les variantes et tailles
                         putExtra("product_variants", ArrayList(product.variants))
-
-                        // On passe les tailles
-                        putStringArrayListExtra("product_sizes", ArrayList(product.availableSizes))
+                        putStringArrayListExtra("product_sizes", ArrayList(product.sizes))
                     }
                     context.startActivity(intent)
                 }
@@ -56,8 +52,15 @@ class ProductAdapter(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = productList[position]
-        holder.img.setImageResource(product.image)
+
         holder.name.text = product.name
-        holder.price.text = product.price
+
+        // CORRECTION PRIX : On ajoute " MAD" à la fin du nombr
+        holder.price.text = "${product.price} MAD"
+
+        Glide.with(context)
+            .load(product.imageUrl)
+            .placeholder(R.drawable.ic_launcher_background) // Image d'attente
+            .into(holder.img)
     }
 }

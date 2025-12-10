@@ -9,7 +9,6 @@ import com.example.kaouzaystyle.data.local.dao.UserDao // Ajout
 import com.example.kaouzaystyle.data.local.entity.ProductCart
 import com.example.kaouzaystyle.data.local.entity.User // Ajout
 
-// Ajout de User::class dans entities et version passe à 2 (ou +1 par rapport à avant)
 @Database(entities = [ProductCart::class, User::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 

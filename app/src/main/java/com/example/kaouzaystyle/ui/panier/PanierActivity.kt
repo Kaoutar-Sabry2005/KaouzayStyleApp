@@ -18,7 +18,6 @@ import com.example.kaouzaystyle.data.local.entity.ProductCart
 import com.example.kaouzaystyle.data.repository.CartRepository
 import com.example.kaouzaystyle.ui.home.HomeActivity
 import com.example.kaouzaystyle.ui.profile.ProfileActivity
-// L'import MaterialButton n'est plus nécessaire
 
 class PanierActivity : AppCompatActivity() {
 
@@ -27,38 +26,36 @@ class PanierActivity : AppCompatActivity() {
     private lateinit var adapter: CartAdapter
     private lateinit var viewModel: CartViewModel
 
-    // --- CHANGEMENT ICI : On utilise ImageView au lieu de MaterialButton ---
     private lateinit var btnClearCart: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
-        // --- 1. Initialisation ViewModel ---
+        //  1. Initialisation ViewModel
         val db = AppDatabase.getInstance(this)
         val repository = CartRepository(db)
         val factory = CartViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[CartViewModel::class.java]
 
-        // --- 2. Initialisation des Vues ---
+        //  2. Initialisation des Vues
         val recyclerView = findViewById<RecyclerView>(R.id.cartRecyclerView)
         subtotalTxt = findViewById(R.id.subtotalAmount)
         totalTxt = findViewById(R.id.totalAmount)
         val btnCheckout = findViewById<Button>(R.id.checkoutButton)
         val btnBack = findViewById<ImageView>(R.id.cartBackButton)
 
-        // On récupère le bouton Vider (qui est maintenant une ImageView dans le XML)
         btnClearCart = findViewById(R.id.clearCartButton)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // --- 3. Initialisation Adapter ---
+        //  3. Initialisation Adapter
         adapter = CartAdapter(emptyList()) { item ->
             viewModel.addToCart(item)
         }
         recyclerView.adapter = adapter
 
-        // --- 4. Observer les données ---
+        //  4. Observer les données
         viewModel.cartItems.observe(this) { items ->
             adapter.submitList(items)
             updateUI(items)
@@ -72,7 +69,7 @@ class PanierActivity : AppCompatActivity() {
             }
         }
 
-        // --- 5. Action du bouton "Vider le panier" ---
+        //  5. Action du bouton "Vider le panier"
         btnClearCart.setOnClickListener {
             if (adapter.itemCount > 0) {
                 afficherConfirmationViderPanier()
@@ -141,105 +138,6 @@ class PanierActivity : AppCompatActivity() {
         }
     }
 }
-/*package com.example.kaouzaystyle.ui.panier
 
-import android.content.Intent
-import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.kaouzaystyle.R
-import com.example.kaouzaystyle.data.local.database.AppDatabase
-import com.example.kaouzaystyle.data.local.entity.ProductCart
-import com.example.kaouzaystyle.data.repository.CartRepository
-import com.example.kaouzaystyle.ui.home.HomeActivity
-import com.example.kaouzaystyle.ui.profile.ProfileActivity
-
-class PanierActivity : AppCompatActivity() {
-
-    private lateinit var subtotalTxt: TextView
-    private lateinit var totalTxt: TextView
-    private lateinit var adapter: CartAdapter
-    private lateinit var viewModel: CartViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cart)
-
-        // Initialisation ViewModel
-        val db = AppDatabase.getInstance(this)
-        val repository = CartRepository(db)
-        val factory = CartViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[CartViewModel::class.java]
-
-        // Initialisation Vues
-        val recyclerView = findViewById<RecyclerView>(R.id.cartRecyclerView)
-        subtotalTxt = findViewById(R.id.subtotalAmount)
-        totalTxt = findViewById(R.id.totalAmount)
-        val btnCheckout = findViewById<Button>(R.id.checkoutButton)
-        val btnBack = findViewById<ImageView>(R.id.cartBackButton)
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        // Initialisation Adapter (liste vide au départ)
-        adapter = CartAdapter(emptyList()) { item ->
-            // Met à jour la quantité dans la BD quand on clique sur + ou -
-            viewModel.addToCart(item)
-        }
-        recyclerView.adapter = adapter
-
-        // OBSERVER LA BASE DE DONNÉES
-        viewModel.cartItems.observe(this) { items ->
-            adapter.submitList(items)
-            updateUI(items)
-        }
-
-        btnCheckout.setOnClickListener {
-            if (adapter.itemCount == 0) {
-                Toast.makeText(this, "Le panier est vide", Toast.LENGTH_SHORT).show()
-            } else {
-                val i = Intent(this, PaymentActivity::class.java)
-                i.putExtra("TOTAL_AMOUNT", totalTxt.text.toString())
-                startActivity(i)
-            }
-        }
-
-        btnBack.setOnClickListener { finish() }
-        setupBottomMenu()
-    }
-
-    private fun updateUI(items: List<ProductCart>) {
-        val subtotal = items.sumOf { it.price * it.quantity }
-        subtotalTxt.text = "%.2f MAD".format(subtotal)
-        totalTxt.text = "%.2f MAD".format(subtotal)
-    }
-
-    private fun setupBottomMenu() {
-        findViewById<View>(R.id.tabAccueilCart).setOnClickListener {
-            val i = Intent(this, HomeActivity::class.java)
-            i.putExtra("activeTab", "accueil")
-            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(i)
-            finish()
-        }
-        findViewById<View>(R.id.tabCategorieCart).setOnClickListener {
-            val i = Intent(this, HomeActivity::class.java)
-            i.putExtra("activeTab", "categorie")
-            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(i)
-            finish()
-        }
-        findViewById<View>(R.id.tabProfilCart).setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
-        }
-    }
-}
-*/
 
 
