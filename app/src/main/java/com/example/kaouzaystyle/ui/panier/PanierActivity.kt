@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog // Pour la fenêtre de confirmation
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,51 +25,45 @@ class PanierActivity : AppCompatActivity() {
     private lateinit var totalTxt: TextView
     private lateinit var adapter: CartAdapter
     private lateinit var viewModel: CartViewModel
-
     private lateinit var btnClearCart: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
-        //  1. Initialisation ViewModel
         val db = AppDatabase.getInstance(this)
         val repository = CartRepository(db)
-        val factory = CartViewModelFactory(repository)
+        // --- MODIF : Passage de 'application' ---
+        val factory = CartViewModelFactory(application, repository)
         viewModel = ViewModelProvider(this, factory)[CartViewModel::class.java]
+        // ----------------------------------------
 
-        //  2. Initialisation des Vues
         val recyclerView = findViewById<RecyclerView>(R.id.cartRecyclerView)
         subtotalTxt = findViewById(R.id.subtotalAmount)
         totalTxt = findViewById(R.id.totalAmount)
         val btnCheckout = findViewById<Button>(R.id.checkoutButton)
         val btnBack = findViewById<ImageView>(R.id.cartBackButton)
-
         btnClearCart = findViewById(R.id.clearCartButton)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        //  3. Initialisation Adapter
         adapter = CartAdapter(emptyList()) { item ->
             viewModel.addToCart(item)
         }
         recyclerView.adapter = adapter
 
-        //  4. Observer les données
         viewModel.cartItems.observe(this) { items ->
             adapter.submitList(items)
             updateUI(items)
 
-            // Gestion de l'état du bouton (activé/désactivé + transparence)
             btnClearCart.isEnabled = items.isNotEmpty()
             if (items.isEmpty()) {
-                btnClearCart.alpha = 0.3f // Très transparent si vide
+                btnClearCart.alpha = 0.3f
             } else {
-                btnClearCart.alpha = 1.0f // Pleinement visible si plein
+                btnClearCart.alpha = 1.0f
             }
         }
 
-        //  5. Action du bouton "Vider le panier"
         btnClearCart.setOnClickListener {
             if (adapter.itemCount > 0) {
                 afficherConfirmationViderPanier()
@@ -78,7 +72,6 @@ class PanierActivity : AppCompatActivity() {
             }
         }
 
-        // Action Paiement
         btnCheckout.setOnClickListener {
             if (adapter.itemCount == 0) {
                 Toast.makeText(this, "Le panier est vide", Toast.LENGTH_SHORT).show()
@@ -93,7 +86,6 @@ class PanierActivity : AppCompatActivity() {
         setupBottomMenu()
     }
 
-    // --- Fonction pour afficher la boîte de dialogue ---
     private fun afficherConfirmationViderPanier() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Vider le panier ?")
@@ -138,6 +130,3 @@ class PanierActivity : AppCompatActivity() {
         }
     }
 }
-
-
-

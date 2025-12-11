@@ -2,6 +2,7 @@ package com.example.kaouzaystyle.ui.signup
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Button
@@ -9,17 +10,29 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope // Nécessaire pour les coroutines
+import androidx.lifecycle.lifecycleScope
 import com.example.kaouzaystyle.R
 import com.example.kaouzaystyle.data.local.database.AppDatabase
 import com.example.kaouzaystyle.data.local.entity.User
 import com.example.kaouzaystyle.ui.login.LoginActivity
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class SignUpActivity : AppCompatActivity() {
+
+    private var auth: FirebaseAuth? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
+
+        // --- PROTECTION CRASH FIREBASE ---
+        try {
+            auth = FirebaseAuth.getInstance()
+        } catch (e: Exception) {
+            Log.e("SignUpActivity", "Firebase erreur : ${e.message}")
+        }
+        // ---------------------------------
 
         val editName = findViewById<EditText>(R.id.editName)
         val editEmail = findViewById<EditText>(R.id.editEmailSignUp)
@@ -33,7 +46,6 @@ class SignUpActivity : AppCompatActivity() {
         val errorPassword = findViewById<TextView>(R.id.errorPassword)
         val errorConfirmPassword = findViewById<TextView>(R.id.errorConfirmPassword)
 
-        // Instance de la DB
         val db = AppDatabase.getInstance(this)
 
         btnSignUp.setOnClickListener {
@@ -42,7 +54,7 @@ class SignUpActivity : AppCompatActivity() {
             val password = editPassword.text.toString()
             val confirmPassword = editConfirmPassword.text.toString()
 
-            // Reset erreurs
+            // 1. Réinitialiser les erreurs
             errorName.visibility = View.GONE
             errorEmail.visibility = View.GONE
             errorPassword.visibility = View.GONE
@@ -50,6 +62,7 @@ class SignUpActivity : AppCompatActivity() {
 
             var isValid = true
 
+            // 2. Vérifications
             if (name.isEmpty()) {
                 errorName.text = "Veuillez entrer votre nom"
                 errorName.visibility = View.VISIBLE
@@ -61,62 +74,73 @@ class SignUpActivity : AppCompatActivity() {
                 errorEmail.visibility = View.VISIBLE
                 isValid = false
             } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                errorEmail.text = "Veuillez entrer une adresse e-mail valide"
+                errorEmail.text = "Email invalide"
                 errorEmail.visibility = View.VISIBLE
                 isValid = false
             }
 
             if (password.isEmpty()) {
-                errorPassword.text = "Veuillez entrer un mot de passe"
+                errorPassword.text = "Mot de passe requis"
                 errorPassword.visibility = View.VISIBLE
                 isValid = false
             } else if (password.length < 6) {
-                errorPassword.text = "Le mot de passe doit contenir au moins 6 caractères"
+                errorPassword.text = "Min. 6 caractères"
                 errorPassword.visibility = View.VISIBLE
                 isValid = false
             }
 
-            if (confirmPassword.isEmpty()) {
-                errorConfirmPassword.text = "Veuillez confirmer votre mot de passe"
-                errorConfirmPassword.visibility = View.VISIBLE
-                isValid = false
-            } else if (password != confirmPassword) {
+            if (confirmPassword != password) {
                 errorConfirmPassword.text = "Les mots de passe ne correspondent pas"
                 errorConfirmPassword.visibility = View.VISIBLE
                 isValid = false
             }
 
+            // 3. Exécution UNIQUEMENT si isValid est true
             if (isValid) {
-                // --- INSERTION DANS ROOM ---
-                lifecycleScope.launch {
-                    // 1. Vérifier si l'email existe déjà
-                    val existingUser = db.userDao().getUserByEmail(email)
-                    if (existingUser != null) {
-                        errorEmail.text = "Cet email est déjà utilisé"
-                        errorEmail.visibility = View.VISIBLE
-                    } else {
-                        // 2. Créer l'utilisateur
-                        val newUser = User(
-                            name = name,
-                            email = email,
-                            password = password
-                        )
-                        db.userDao().registerUser(newUser)
-
-                        Toast.makeText(this@SignUpActivity, "Inscription réussie !", Toast.LENGTH_SHORT).show()
-
-                        // Redirection
-                        val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                        startActivity(intent)
-                        finish()
-                    }
+                // Essai Firebase
+                if (auth != null) {
+                    auth!!.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this) { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(this, "Compte Firebase créé !", Toast.LENGTH_SHORT).show()
+                                saveToRoomAndExit(db, name, email, password)
+                            } else {
+                                // Si échec Firebase, on tente quand même en Local (pour le prof)
+                                saveToRoomAndExit(db, name, email, password)
+                            }
+                        }
+                } else {
+                    // Pas de Firebase -> Local direct
+                    saveToRoomAndExit(db, name, email, password)
                 }
             }
+            // ATTENTION : Ne rien mettre ici (pas de startActivity), sinon ça s'exécute même en cas d'erreur !
         }
 
         txtAlreadyHaveAccount.setOnClickListener {
-            finish()
+            finish() // Retourne à la page de connexion
+        }
+    }
+
+    private fun saveToRoomAndExit(db: AppDatabase, name: String, email: String, pass: String) {
+        lifecycleScope.launch {
+            // Vérifier doublon local
+            val existing = db.userDao().getUserByEmail(email)
+            if (existing != null) {
+                Toast.makeText(this@SignUpActivity, "Cet email existe déjà (Local)", Toast.LENGTH_SHORT).show()
+            } else {
+                val newUser = User(name = name, email = email, password = pass)
+                db.userDao().registerUser(newUser)
+
+                Toast.makeText(this@SignUpActivity, "Inscription réussie !", Toast.LENGTH_SHORT).show()
+
+                // C'est ICI qu'on change de page, après le succès de l'enregistrement
+                val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
+                // On efface l'historique pour ne pas revenir sur SignUp en faisant "Retour"
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
         }
     }
 }

@@ -61,14 +61,18 @@ dependencies {
     // Pour télécharger le JSON (Retrofit + Gson)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-// Pour afficher les images depuis une URL (Glide)
+    // Pour afficher les images depuis une URL (Glide)
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    val room_version = "2.6.1" // Ou la version que vous utilisez
+    val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
-    implementation("androidx.room:room-ktx:$room_version") // <--- CELLE-CI EST OBLIGATOIRE POUR FLOW
+    implementation("androidx.room:room-ktx:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
 
     // Pour les coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 
 }

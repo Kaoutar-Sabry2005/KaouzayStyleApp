@@ -25,15 +25,14 @@ import com.example.kaouzaystyle.data.repository.FavoriteRepository
 import com.example.kaouzaystyle.ui.panier.CartViewModel
 import com.example.kaouzaystyle.ui.panier.CartViewModelFactory
 import com.example.kaouzaystyle.ui.panier.PanierActivity
+import com.example.kaouzaystyle.util.NotificationHelper
 import kotlinx.coroutines.launch
 
 class ProductDetailActivity : AppCompatActivity() {
 
-    // ViewModels et Repositories
     private lateinit var cartViewModel: CartViewModel
     private lateinit var favoriteRepository: FavoriteRepository
 
-    // Variables d'état
     private var selectedSizeButton: Button? = null
     private var selectedColorView: View? = null
     private var currentImageUrl: String = ""
@@ -43,18 +42,16 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_detail)
 
-        // 1. INITIALISATION BDD & REPOS
         val db = AppDatabase.getInstance(this)
 
-        // Setup Cart (Panier)
+        // --- MODIF : On passe 'application' à la factory ---
         val cartRepo = CartRepository(db)
-        val cartFactory = CartViewModelFactory(cartRepo)
+        val cartFactory = CartViewModelFactory(application, cartRepo)
         cartViewModel = ViewModelProvider(this, cartFactory)[CartViewModel::class.java]
+        // ---------------------------------------------------
 
-        // Setup Favorites (Favoris)
         favoriteRepository = FavoriteRepository(db)
 
-        // 2. RÉCUPÉRATION DES VUES
         val imgProduct = findViewById<ImageView>(R.id.productDetailImage)
         val txtName = findViewById<TextView>(R.id.productDetailName)
         val txtPrice = findViewById<TextView>(R.id.productDetailPrice)
@@ -64,51 +61,38 @@ class ProductDetailActivity : AppCompatActivity() {
         val btnAdd = findViewById<Button>(R.id.addToCartButton)
         val btnBuy = findViewById<Button>(R.id.buyNowButton)
         val btnBack = findViewById<ImageView>(R.id.backButton)
-
-        // --- CORRECTION MAJEURE ICI ---
-        // On utilise R.id.btnFavorite (l'identifiant dans le XML)
-        // et non R.drawable (l'image).
         val btnFavorite = findViewById<ImageView>(R.id.btnFavorite)
 
-        // 3. LECTURE DES DONNÉES (INTENT)
         val pName = intent.getStringExtra("product_name") ?: ""
         val pPriceString = intent.getStringExtra("product_price") ?: "0.0"
         val pDesc = intent.getStringExtra("product_description")
         currentImageUrl = intent.getStringExtra("product_image_url") ?: ""
 
-        // Nettoyage du prix
         val priceDouble = pPriceString.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
 
         @Suppress("UNCHECKED_CAST")
         val variants = intent.getSerializableExtra("product_variants") as? ArrayList<ProductVariant> ?: arrayListOf()
         val sizes = intent.getStringArrayListExtra("product_sizes") ?: arrayListOf()
 
-        // 4. AFFICHAGE DE BASE
         txtName.text = pName
         txtPrice.text = "$pPriceString MAD"
         txtDesc.text = pDesc
 
-        // Affichage image avec Glide
         loadProductImage(currentImageUrl, imgProduct)
 
-        // 5. GESTION DES FAVORIS
         if (btnFavorite != null) {
-            // A. Vérifier l'état au démarrage
             lifecycleScope.launch {
                 isFavorite = favoriteRepository.isFavorite(pName)
                 updateFavoriteIcon(btnFavorite)
             }
 
-            // B. Clic sur le bouton favori
             btnFavorite.setOnClickListener {
                 lifecycleScope.launch {
                     if (isFavorite) {
-                        // Supprimer des favoris
                         favoriteRepository.removeFavorite(pName)
                         isFavorite = false
                         Toast.makeText(this@ProductDetailActivity, "Retiré des favoris", Toast.LENGTH_SHORT).show()
                     } else {
-                        // Ajouter aux favoris
                         val fav = ProductFavorite(
                             name = pName,
                             price = priceDouble,
@@ -118,13 +102,11 @@ class ProductDetailActivity : AppCompatActivity() {
                         isFavorite = true
                         Toast.makeText(this@ProductDetailActivity, "Ajouté aux favoris ❤️", Toast.LENGTH_SHORT).show()
                     }
-                    // Mettre à jour l'icône (Couleur et Forme)
                     updateFavoriteIcon(btnFavorite)
                 }
             }
         }
 
-        // 6. GÉNÉRATION DES TAILLES
         layoutSizes.removeAllViews()
         for (s in sizes) {
             val btn = Button(this)
@@ -146,7 +128,6 @@ class ProductDetailActivity : AppCompatActivity() {
             (layoutSizes.getChildAt(0) as Button).performClick()
         }
 
-        // 7. GÉNÉRATION DES COULEURS
         layoutColors.removeAllViews()
         for (v in variants) {
             val view = View(this)
@@ -164,7 +145,6 @@ class ProductDetailActivity : AppCompatActivity() {
                 selectedColorView = view
                 view.background = round(v.color, true)
 
-                // Mise à jour de l'image quand on clique sur une couleur
                 currentImageUrl = v.imageUrl
                 loadProductImage(currentImageUrl, imgProduct)
             }
@@ -174,7 +154,6 @@ class ProductDetailActivity : AppCompatActivity() {
             layoutColors.getChildAt(0).callOnClick()
         }
 
-        // 8. BOUTONS D'ACTION
         btnBack.setOnClickListener { finish() }
 
         btnAdd.setOnClickListener {
@@ -189,8 +168,6 @@ class ProductDetailActivity : AppCompatActivity() {
             }
         }
     }
-
-    // --- HELPER METHODS ---
 
     private fun handleAddToCart(name: String, price: Double): Boolean {
         if (selectedSizeButton == null) {
@@ -216,6 +193,11 @@ class ProductDetailActivity : AppCompatActivity() {
             colorInt = color
         )
         cartViewModel.addToCart(item)
+
+        // --- AJOUT : Notification d'ajout ---
+        NotificationHelper.sendCartNotification(this, name)
+        // ------------------------------------
+
         return true
     }
 
@@ -227,16 +209,11 @@ class ProductDetailActivity : AppCompatActivity() {
             .into(imageView)
     }
 
-    // --- CORRECTION ICI : Gestion complète de l'icône ---
     private fun updateFavoriteIcon(view: ImageView) {
         if (isFavorite) {
-            // Favori : Cœur plein + Jaune
-            // Assure-toi d'avoir le fichier res/drawable/ic_heart_filled.xml
             view.setImageResource(R.drawable.ic_heart_filled)
             view.setColorFilter(Color.parseColor("#FAB005"))
         } else {
-            // Pas Favori : Cœur vide (bordure) + Gris
-            // Assure-toi d'avoir le fichier res/drawable/btnfavorite.xml
             view.setImageResource(R.drawable.btnfavorite)
             view.setColorFilter(Color.GRAY)
         }
