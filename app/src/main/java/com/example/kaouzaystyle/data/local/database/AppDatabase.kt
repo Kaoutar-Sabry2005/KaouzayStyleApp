@@ -11,68 +11,38 @@ import com.example.kaouzaystyle.data.local.entity.ProductCart
 import com.example.kaouzaystyle.data.local.entity.ProductFavorite // <-- AJOUT
 import com.example.kaouzaystyle.data.local.entity.User
 
-// Ajoute ProductFavorite::class et augmente la version
+// Déclaration de la base de données avec les entités et la version
 @Database(entities = [ProductCart::class, User::class, ProductFavorite::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
+    // Méthode pour accéder aux opérations sur le panier
     abstract fun cartDao(): CartDao
+
+    // Méthode pour accéder aux opérations sur les utilisateurs
     abstract fun userDao(): UserDao
+
+    // Méthode pour accéder aux opérations sur les favoris
     abstract fun favoriteDao(): FavoriteDao // <-- AJOUT
 
     companion object {
+        // Instance unique de la base de données pour éviter plusieurs créations
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        // Fonction pour récupérer l'instance unique de la base de données
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "kaouzay_db"
+                    "kaouzay_db" // Nom de la base de données
                 )
-                    .fallbackToDestructiveMigration() // Va supprimer les données si la version change (utile en dév)
+                    .fallbackToDestructiveMigration() // Supprime les données si la version change (pratique en développement)
                     .build()
-                INSTANCE = instance
+                INSTANCE = instance // Sauvegarde l'instance
                 instance
             }
         }
     }
 }
-/*
-package com.example.kaouzaystyle.data.local.database
 
-import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.example.kaouzaystyle.data.local.dao.CartDao
-import com.example.kaouzaystyle.data.local.dao.UserDao // Ajout
-import com.example.kaouzaystyle.data.local.entity.ProductCart
-import com.example.kaouzaystyle.data.local.entity.User // Ajout
-
-@Database(entities = [ProductCart::class, User::class], version = 2, exportSchema = false)
-abstract class AppDatabase : RoomDatabase() {
-
-    abstract fun cartDao(): CartDao
-    abstract fun userDao(): UserDao // Ajout
-
-    companion object {
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
-
-        fun getInstance(context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "kaouzay_db"
-                )
-                    .fallbackToDestructiveMigration() // Important pour éviter le crash si on change la structure
-                    .build()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-}
- */

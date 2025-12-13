@@ -33,7 +33,6 @@ class LoginActivity : AppCompatActivity() {
             Log.e("LoginActivity", "Firebase n'est pas configuré correctement : ${e.message}")
             // On continue sans Firebase, auth reste null
         }
-        // ----------------------------------
 
         val emailEdit = findViewById<EditText>(R.id.editEmail)
         val passwordEdit = findViewById<EditText>(R.id.editPassword)

@@ -32,7 +32,6 @@ class SignUpActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e("SignUpActivity", "Firebase erreur : ${e.message}")
         }
-        // ---------------------------------
 
         val editName = findViewById<EditText>(R.id.editName)
         val editEmail = findViewById<EditText>(R.id.editEmailSignUp)

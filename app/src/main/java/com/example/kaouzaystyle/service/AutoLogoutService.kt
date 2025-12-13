@@ -14,7 +14,7 @@ class AutoLogoutService : Service() {
     private val handler = Handler(Looper.getMainLooper())
 
     // --- TEMPS AVANT DÉCONNEXION ---
-    private val TIMEOUT_TIME = 5 * 60 * 1000L
+     private val TIMEOUT_TIME = 30 * 1000L
 
     private val logoutRunnable = Runnable {
         performLogout()

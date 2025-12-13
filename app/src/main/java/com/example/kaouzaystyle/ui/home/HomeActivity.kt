@@ -77,33 +77,51 @@ class HomeActivity : AppCompatActivity() {
         // 2. DEMANDER LA PERMISSION (Android 13+)
         checkNotificationPermission()
 
-        // 3. Démarrer le service de déconnexion
+        // 3. Démarrer le service de déconnexion automatique
         startService(Intent(this, AutoLogoutService::class.java))
 
+        // Initialiser les vues
         initViews()
         recyclerProducts.layoutManager = LinearLayoutManager(this)
+
+        // Configurer les clics sur les boutons et menus
         setupClickListeners()
+
+        // Récupérer les produits depuis l'API
         fetchProductsFromApi()
     }
 
-    // --- DETECTION ACTIVITÉ UTILISATEUR (Une seule fois !) ---
+    // Détecte toute interaction de l'utilisateur
     override fun onUserInteraction() {
         super.onUserInteraction()
-        // On prévient le service pour remettre le timer à zéro
+        // Remet le timer du service de déconnexion à zéro
         startService(Intent(this, AutoLogoutService::class.java))
     }
-    // --------------------------------------------------------
 
+    // Vérifie si l'application a la permission d'envoyer des notifications
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 // Demander la permission
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    101
+                )
             }
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    // Résultat de la demande de permission
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 101) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -114,15 +132,37 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    // Récupère les produits depuis l'API et filtre par catégorie
     private fun fetchProductsFromApi() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.instance.getProducts()
                 val allProducts = response.products
-                caftans = ArrayList(allProducts.filter { it.category.equals("caftan", ignoreCase = true) })
-                djellabas = ArrayList(allProducts.filter { it.category.equals("djellaba", ignoreCase = true) })
-                babouches = ArrayList(allProducts.filter { it.category.equals("babouche", ignoreCase = true) })
-                accessoires = ArrayList(allProducts.filter { it.category.contains("accessoire", ignoreCase = true) })
+                // Filtrer les produits par catégories
+                caftans = ArrayList(allProducts.filter {
+                    it.category.equals(
+                        "caftan",
+                        ignoreCase = true
+                    )
+                })
+                djellabas = ArrayList(allProducts.filter {
+                    it.category.equals(
+                        "djellaba",
+                        ignoreCase = true
+                    )
+                })
+                babouches = ArrayList(allProducts.filter {
+                    it.category.equals(
+                        "babouche",
+                        ignoreCase = true
+                    )
+                })
+                accessoires = ArrayList(allProducts.filter {
+                    it.category.contains(
+                        "accessoire",
+                        ignoreCase = true
+                    )
+                })
                 handleNavigationIntent()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -132,50 +172,83 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    // Gérer les intents reçus pour navigation interne
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
         handleNavigationIntent()
     }
 
+    // Reprendre l'activité et s'assurer que le service tourne
     override fun onResume() {
         super.onResume()
         if (caftans.isNotEmpty()) handleNavigationIntent()
-        // S'assurer que le service tourne
         startService(Intent(this, AutoLogoutService::class.java))
     }
 
+    // Gère la navigation selon les intents (onglets et catégories)
     private fun handleNavigationIntent() {
         val intent = intent
         val activeTab = intent?.getStringExtra("activeTab") ?: "accueil"
         val openCategory = intent?.getStringExtra("openCategory") ?: "caftan"
 
-        resetBottomBarUI()
+        resetBottomBarUI() // Réinitialiser l'UI du bas
 
         if (activeTab.lowercase() == "categorie") {
             selectBottomTab(tabCategorie)
             when (openCategory.lowercase()) {
-                "djellaba" -> { activateCategory(menuDjellaba, underlineDjellaba); showProducts(djellabas) }
-                "babouches" -> { activateCategory(menuBabouches, underlineBabouches); showProducts(babouches) }
-                "accessoires" -> { activateCategory(menuAccessoires, underlineAccessoires); showProducts(accessoires) }
-                else -> { activateCategory(menuCaftan, underlineCaftan); showProducts(caftans) }
+                "djellaba" -> {
+                    activateCategory(menuDjellaba, underlineDjellaba); showProducts(djellabas)
+                }
+
+                "babouches" -> {
+                    activateCategory(menuBabouches, underlineBabouches); showProducts(babouches)
+                }
+
+                "accessoires" -> {
+                    activateCategory(menuAccessoires, underlineAccessoires); showProducts(
+                        accessoires
+                    )
+                }
+
+                else -> {
+                    activateCategory(menuCaftan, underlineCaftan); showProducts(caftans)
+                }
             }
         } else {
             selectBottomTab(tabAccueil)
-            if (::menuDjellaba.isInitialized && menuDjellaba.currentTextColor == Color.WHITE) showProducts(djellabas)
-            else if (::menuBabouches.isInitialized && menuBabouches.currentTextColor == Color.WHITE) showProducts(babouches)
-            else if (::menuAccessoires.isInitialized && menuAccessoires.currentTextColor == Color.WHITE) showProducts(accessoires)
-            else { activateCategory(menuCaftan, underlineCaftan); showProducts(caftans) }
+            if (::menuDjellaba.isInitialized && menuDjellaba.currentTextColor == Color.WHITE) showProducts(
+                djellabas
+            )
+            else if (::menuBabouches.isInitialized && menuBabouches.currentTextColor == Color.WHITE) showProducts(
+                babouches
+            )
+            else if (::menuAccessoires.isInitialized && menuAccessoires.currentTextColor == Color.WHITE) showProducts(
+                accessoires
+            )
+            else {
+                activateCategory(menuCaftan, underlineCaftan); showProducts(caftans)
+            }
         }
     }
 
+    // Réinitialise l'UI de la barre du bas
     private fun resetBottomBarUI() {
         val defaultColor = Color.parseColor("#BAB09C")
         listOf(tabAccueil, tabCategorie, tabPanier, tabProfil).forEach { it.background = null }
-        listOf(iconAccueil, iconCategorie, iconPanier, iconProfil).forEach { it.setColorFilter(defaultColor) }
-        listOf(menuAccueil, menuCategorie, menuPanier, menuProfil).forEach { it.setTextColor(defaultColor) }
+        listOf(iconAccueil, iconCategorie, iconPanier, iconProfil).forEach {
+            it.setColorFilter(
+                defaultColor
+            )
+        }
+        listOf(menuAccueil, menuCategorie, menuPanier, menuProfil).forEach {
+            it.setTextColor(
+                defaultColor
+            )
+        }
     }
 
+    // Initialiser toutes les vues de l'activité
     private fun initViews() {
         recyclerProducts = findViewById(R.id.recyclerProducts)
         menuCaftan = findViewById(R.id.menuCaftan)
@@ -199,15 +272,44 @@ class HomeActivity : AppCompatActivity() {
         menuPanier = findViewById(R.id.menuPanier)
         menuProfil = findViewById(R.id.menuProfil)
         searchBar = findViewById(R.id.searchBar)
-        try { iconGoToFavorites = findViewById(R.id.iconGoToFavorites) } catch (e: Exception) {}
+        try {
+            iconGoToFavorites = findViewById(R.id.iconGoToFavorites)
+        } catch (e: Exception) {
+        } // Optionnel
     }
 
+    // Configurer les clics sur les menus et boutons
     private fun setupClickListeners() {
-        menuCaftan.setOnClickListener { showProducts(caftans); activateCategory(menuCaftan, underlineCaftan); selectBottomTab(tabCategorie) }
-        menuDjellaba.setOnClickListener { showProducts(djellabas); activateCategory(menuDjellaba, underlineDjellaba); selectBottomTab(tabCategorie) }
-        menuBabouches.setOnClickListener { showProducts(babouches); activateCategory(menuBabouches, underlineBabouches); selectBottomTab(tabCategorie) }
-        menuAccessoires.setOnClickListener { showProducts(accessoires); activateCategory(menuAccessoires, underlineAccessoires); selectBottomTab(tabCategorie) }
-        tabAccueil.setOnClickListener { showProducts(caftans); activateCategory(menuCaftan, underlineCaftan); selectBottomTab(tabAccueil) }
+        menuCaftan.setOnClickListener {
+            showProducts(caftans); activateCategory(
+            menuCaftan,
+            underlineCaftan
+        ); selectBottomTab(tabCategorie)
+        }
+        menuDjellaba.setOnClickListener {
+            showProducts(djellabas); activateCategory(
+            menuDjellaba,
+            underlineDjellaba
+        ); selectBottomTab(tabCategorie)
+        }
+        menuBabouches.setOnClickListener {
+            showProducts(babouches); activateCategory(
+            menuBabouches,
+            underlineBabouches
+        ); selectBottomTab(tabCategorie)
+        }
+        menuAccessoires.setOnClickListener {
+            showProducts(accessoires); activateCategory(
+            menuAccessoires,
+            underlineAccessoires
+        ); selectBottomTab(tabCategorie)
+        }
+        tabAccueil.setOnClickListener {
+            showProducts(caftans); activateCategory(
+            menuCaftan,
+            underlineCaftan
+        ); selectBottomTab(tabAccueil)
+        }
         tabCategorie.setOnClickListener {
             selectBottomTab(tabCategorie)
             if (menuCaftan.currentTextColor != Color.WHITE && menuDjellaba.currentTextColor != Color.WHITE) {
@@ -216,14 +318,24 @@ class HomeActivity : AppCompatActivity() {
         }
         tabPanier.setOnClickListener { startActivity(Intent(this, PanierActivity::class.java)) }
         tabProfil.setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
-        if (::iconGoToFavorites.isInitialized) iconGoToFavorites.setOnClickListener { startActivity(Intent(this, FavoritesActivity::class.java)) }
+        if (::iconGoToFavorites.isInitialized) iconGoToFavorites.setOnClickListener {
+            startActivity(
+                Intent(this, FavoritesActivity::class.java)
+            )
+        }
+
+        // Recherche dynamique sur le champ searchBar
         searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { filterProducts(s.toString()) }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterProducts(s.toString())
+            }
+
             override fun afterTextChanged(s: Editable?) {}
         })
     }
 
+    // Filtrer les produits selon la catégorie et la recherche
     private fun filterProducts(query: String) {
         val allProducts = when {
             menuCaftan.currentTextColor == Color.WHITE -> caftans
@@ -231,31 +343,71 @@ class HomeActivity : AppCompatActivity() {
             menuBabouches.currentTextColor == Color.WHITE -> babouches
             else -> accessoires
         }
-        recyclerProducts.adapter = ProductAdapter(this, ArrayList(allProducts.filter { it.name.contains(query, ignoreCase = true) }))
+        recyclerProducts.adapter = ProductAdapter(
+            this,
+            ArrayList(allProducts.filter { it.name.contains(query, ignoreCase = true) })
+        )
     }
 
+    // Sélectionner un onglet du bas et mettre à jour les couleurs
     private fun selectBottomTab(selectedTab: View) {
         val defaultColor = Color.parseColor("#BAB09C")
         val selectedColor = Color.parseColor("#FAB005")
         val selectedBgColor = Color.parseColor("#35342D")
         listOf(tabAccueil, tabCategorie, tabPanier, tabProfil).forEach { it.background = null }
-        listOf(iconAccueil, iconCategorie, iconPanier, iconProfil).forEach { it.setColorFilter(defaultColor) }
-        listOf(menuAccueil, menuCategorie, menuPanier, menuProfil).forEach { it.setTextColor(defaultColor) }
+        listOf(iconAccueil, iconCategorie, iconPanier, iconProfil).forEach {
+            it.setColorFilter(
+                defaultColor
+            )
+        }
+        listOf(menuAccueil, menuCategorie, menuPanier, menuProfil).forEach {
+            it.setTextColor(
+                defaultColor
+            )
+        }
         when (selectedTab.id) {
-            R.id.tabAccueil -> { tabAccueil.setBackgroundColor(selectedBgColor); iconAccueil.setColorFilter(selectedColor); menuAccueil.setTextColor(selectedColor) }
-            R.id.tabCategorie -> { tabCategorie.setBackgroundColor(selectedBgColor); iconCategorie.setColorFilter(selectedColor); menuCategorie.setTextColor(selectedColor) }
+            R.id.tabAccueil -> {
+                tabAccueil.setBackgroundColor(selectedBgColor); iconAccueil.setColorFilter(
+                    selectedColor
+                ); menuAccueil.setTextColor(selectedColor)
+            }
+
+            R.id.tabCategorie -> {
+                tabCategorie.setBackgroundColor(selectedBgColor); iconCategorie.setColorFilter(
+                    selectedColor
+                ); menuCategorie.setTextColor(selectedColor)
+            }
         }
     }
 
-    private fun showProducts(list: ArrayList<Product>) { recyclerProducts.adapter = ProductAdapter(this, list) }
+    // Afficher les produits dans le RecyclerView
+    private fun showProducts(list: ArrayList<Product>) {
+        recyclerProducts.adapter = ProductAdapter(this, list)
+    }
+
+    // Activer visuellement une catégorie
     private fun activateCategory(selected: TextView, underline: View) {
         resetCategoryStyles()
-        selected.setTextColor(Color.WHITE); selected.setTypeface(null, Typeface.BOLD); underline.setBackgroundColor(Color.WHITE)
+        selected.setTextColor(Color.WHITE); selected.setTypeface(
+            null,
+            Typeface.BOLD
+        ); underline.setBackgroundColor(Color.WHITE)
     }
+
+    // Réinitialiser les styles des catégories
     private fun resetCategoryStyles() {
         val gray = Color.parseColor("#D5D0C8")
         val underlineGray = Color.parseColor("#AFAAA2")
-        listOf(menuCaftan, menuDjellaba, menuBabouches, menuAccessoires).forEach { it.setTextColor(gray); it.setTypeface(null, Typeface.NORMAL) }
-        listOf(underlineCaftan, underlineDjellaba, underlineBabouches, underlineAccessoires).forEach { it.setBackgroundColor(underlineGray) }
+        listOf(menuCaftan, menuDjellaba, menuBabouches, menuAccessoires).forEach {
+            it.setTextColor(
+                gray
+            ); it.setTypeface(null, Typeface.NORMAL)
+        }
+        listOf(
+            underlineCaftan,
+            underlineDjellaba,
+            underlineBabouches,
+            underlineAccessoires
+        ).forEach { it.setBackgroundColor(underlineGray) }
     }
 }
